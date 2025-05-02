@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS TB_STUDENT (
+    id UUID PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    phone_number VARCHAR(11) NOT NULL,
+    major VARCHAR(100),
+    college VARCHAR(100)
+);
