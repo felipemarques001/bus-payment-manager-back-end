@@ -1,11 +1,15 @@
 package com.felipemarquesdev.bus_payment_manager.services;
 
 import com.felipemarquesdev.bus_payment_manager.dtos.student.StudentRequestDTO;
+import com.felipemarquesdev.bus_payment_manager.dtos.student.StudentResponseDTO;
 import com.felipemarquesdev.bus_payment_manager.entities.Student;
 import com.felipemarquesdev.bus_payment_manager.exceptions.FieldAlreadyInUseException;
+import com.felipemarquesdev.bus_payment_manager.exceptions.ResourceNotFoundException;
 import com.felipemarquesdev.bus_payment_manager.repositories.StudentRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 public class StudentService {
@@ -23,5 +27,12 @@ public class StudentService {
 
         Student newStudent = new Student(dto);
         repository.save(newStudent);
+    }
+
+    public StudentResponseDTO findById(UUID id) {
+        Student student = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Student", "ID"));
+
+        return StudentResponseDTO.fromStudent(student);
     }
 }
