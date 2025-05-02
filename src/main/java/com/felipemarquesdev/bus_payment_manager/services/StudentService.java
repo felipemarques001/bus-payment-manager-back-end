@@ -1,5 +1,6 @@
 package com.felipemarquesdev.bus_payment_manager.services;
 
+import com.felipemarquesdev.bus_payment_manager.dtos.student.StudentPageResponseDTO;
 import com.felipemarquesdev.bus_payment_manager.dtos.student.StudentRequestDTO;
 import com.felipemarquesdev.bus_payment_manager.dtos.student.StudentResponseDTO;
 import com.felipemarquesdev.bus_payment_manager.entities.Student;
@@ -7,6 +8,9 @@ import com.felipemarquesdev.bus_payment_manager.exceptions.FieldAlreadyInUseExce
 import com.felipemarquesdev.bus_payment_manager.exceptions.ResourceNotFoundException;
 import com.felipemarquesdev.bus_payment_manager.repositories.StudentRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -34,5 +38,11 @@ public class StudentService {
                 .orElseThrow(() -> new ResourceNotFoundException("Student", "ID"));
 
         return StudentResponseDTO.fromStudent(student);
+    }
+
+    public StudentPageResponseDTO findAll(int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Page<Student> studentsPage = repository.findAll(pageable);
+        return StudentPageResponseDTO.fromStudentPage(studentsPage);
     }
 }

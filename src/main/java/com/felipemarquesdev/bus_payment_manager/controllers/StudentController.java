@@ -1,5 +1,6 @@
 package com.felipemarquesdev.bus_payment_manager.controllers;
 
+import com.felipemarquesdev.bus_payment_manager.dtos.student.StudentPageResponseDTO;
 import com.felipemarquesdev.bus_payment_manager.dtos.student.StudentRequestDTO;
 import com.felipemarquesdev.bus_payment_manager.dtos.student.StudentResponseDTO;
 import com.felipemarquesdev.bus_payment_manager.services.StudentService;
@@ -29,6 +30,15 @@ public class StudentController {
     @GetMapping("/{id}")
     ResponseEntity<StudentResponseDTO> getById(@PathVariable(name = "id") UUID id) {
         StudentResponseDTO responseBody = service.findById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(responseBody);
+    }
+
+    @GetMapping
+    ResponseEntity<StudentPageResponseDTO> getAll(
+            @RequestParam(defaultValue = "0") int pageNumber,
+            @RequestParam(defaultValue = "15") int pageSize
+    ) {
+        StudentPageResponseDTO responseBody = service.findAll(pageNumber, pageSize);
         return ResponseEntity.status(HttpStatus.OK).body(responseBody);
     }
 }
