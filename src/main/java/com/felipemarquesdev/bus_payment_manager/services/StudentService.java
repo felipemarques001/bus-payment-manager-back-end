@@ -28,7 +28,7 @@ public class StudentService {
     @Transactional
     public void create(StudentRequestDTO dto) {
         if (repository.existsByPhoneNumber(dto.phoneNumber()))
-            throw new FieldAlreadyInUseException("phoneNumber");
+            throw new FieldAlreadyInUseException("phone number");
 
         Student newStudent = new Student(dto);
         repository.save(newStudent);
