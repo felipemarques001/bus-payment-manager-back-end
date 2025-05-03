@@ -41,4 +41,19 @@ public class StudentController {
         StudentPageResponseDTO responseBody = service.findAll(pageNumber, pageSize);
         return ResponseEntity.status(HttpStatus.OK).body(responseBody);
     }
+
+    @PutMapping("/{id}")
+    ResponseEntity<StudentResponseDTO> put(
+            @PathVariable(name = "id") UUID id,
+            @RequestBody @Valid StudentRequestDTO requestBody
+    ) {
+        StudentResponseDTO responseBody = service.update(id, requestBody);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(responseBody);
+    }
+
+    @DeleteMapping("/{id}")
+    ResponseEntity<Void> delete(@PathVariable(name = "id") UUID id) {
+        service.delete(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }

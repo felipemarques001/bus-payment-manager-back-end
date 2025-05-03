@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -34,9 +35,7 @@ public class StudentService {
     }
 
     public StudentResponseDTO findById(UUID id) {
-        Student student = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Student", "ID"));
-
+        Student student = findStudentById(id);
         return StudentResponseDTO.fromStudent(student);
     }
 
@@ -44,5 +43,33 @@ public class StudentService {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         Page<Student> studentsPage = repository.findAll(pageable);
         return StudentPageResponseDTO.fromStudentPage(studentsPage);
+    }
+
+    @Transactional
+    public StudentResponseDTO update(UUID id, StudentRequestDTO dto) {
+        Student student = findStudentById(id);
+
+        Optional<Student> studentFoundedByPhoneNumber = repository.findByPhoneNumber(dto.phoneNumber());
+        if (studentFoundedByPhoneNumber.isPresent() && studentFoundedByPhoneNumber.get().getId() != id)
+            throw new FieldAlreadyInUseException("phone number");
+
+        student.setName(dto.name());
+        student.setPhoneNumber(dto.phoneNumber());
+        student.setMajor(dto.major());
+        student.setCollege(dto.college());
+
+        Student updatedStudent = repository.save(student);
+        return StudentResponseDTO.fromStudent(updatedStudent);
+    }
+
+    @Transactional
+    public void delete(UUID id) {
+        Student student = findStudentById(id);
+        repository.delete(student);
+    }
+
+    private Student findStudentById(UUID id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Student", "ID"));
     }
 }
