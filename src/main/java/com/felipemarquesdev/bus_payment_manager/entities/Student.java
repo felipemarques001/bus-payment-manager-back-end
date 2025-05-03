@@ -30,10 +30,13 @@ public class Student {
 
     private String college;
 
+    private Boolean active;
+
     public Student(StudentRequestDTO dto) {
         this.name = dto.name();
         this.phoneNumber = dto.phoneNumber();
         this.major = dto.major();
         this.college = dto.college();
+        this.active = true;
     }
 }

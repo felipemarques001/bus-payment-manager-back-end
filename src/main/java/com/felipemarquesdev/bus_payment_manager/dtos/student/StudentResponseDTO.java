@@ -14,7 +14,9 @@ public record StudentResponseDTO (
 
         String major,
 
-        String college
+        String college,
+
+        Boolean active
 ) {
 
     public static StudentResponseDTO fromStudent(Student student) {
@@ -23,7 +25,8 @@ public record StudentResponseDTO (
                 student.getName(),
                 student.getPhoneNumber(),
                 student.getMajor(),
-                student.getCollege()
+                student.getCollege(),
+                student.getActive()
         );
     }
 }

@@ -1,5 +1,6 @@
 package com.felipemarquesdev.bus_payment_manager.services;
 
+import com.felipemarquesdev.bus_payment_manager.dtos.student.StudentActiveRequestDTO;
 import com.felipemarquesdev.bus_payment_manager.dtos.student.StudentPageResponseDTO;
 import com.felipemarquesdev.bus_payment_manager.dtos.student.StudentRequestDTO;
 import com.felipemarquesdev.bus_payment_manager.dtos.student.StudentResponseDTO;
@@ -66,6 +67,13 @@ public class StudentService {
     public void delete(UUID id) {
         Student student = findStudentById(id);
         repository.delete(student);
+    }
+
+    @Transactional
+    public void updateActiveStatus(UUID id, StudentActiveRequestDTO dto) {
+        Student student = findStudentById(id);
+        student.setActive(dto.active());
+        repository.save(student);
     }
 
     private Student findStudentById(UUID id) {

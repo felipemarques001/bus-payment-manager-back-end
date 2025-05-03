@@ -1,5 +1,6 @@
 package com.felipemarquesdev.bus_payment_manager.controllers;
 
+import com.felipemarquesdev.bus_payment_manager.dtos.student.StudentActiveRequestDTO;
 import com.felipemarquesdev.bus_payment_manager.dtos.student.StudentPageResponseDTO;
 import com.felipemarquesdev.bus_payment_manager.dtos.student.StudentRequestDTO;
 import com.felipemarquesdev.bus_payment_manager.dtos.student.StudentResponseDTO;
@@ -54,6 +55,15 @@ public class StudentController {
     @DeleteMapping("/{id}")
     ResponseEntity<Void> delete(@PathVariable(name = "id") UUID id) {
         service.delete(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @PatchMapping("/{id}/active")
+    ResponseEntity<Void> patchActiveStatus(
+            @PathVariable(name = "id") UUID id,
+            @RequestBody @Valid StudentActiveRequestDTO requestBody
+    ) {
+        service.updateActiveStatus(id, requestBody);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
