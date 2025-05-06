@@ -1,7 +1,7 @@
 package com.felipemarquesdev.bus_payment_manager.services;
 
+import com.felipemarquesdev.bus_payment_manager.dtos.page.PageResponseDTO;
 import com.felipemarquesdev.bus_payment_manager.dtos.student.StudentActiveRequestDTO;
-import com.felipemarquesdev.bus_payment_manager.dtos.student.StudentPageResponseDTO;
 import com.felipemarquesdev.bus_payment_manager.dtos.student.StudentRequestDTO;
 import com.felipemarquesdev.bus_payment_manager.dtos.student.StudentResponseDTO;
 import com.felipemarquesdev.bus_payment_manager.entities.Student;
@@ -41,10 +41,10 @@ public class StudentService {
         return StudentResponseDTO.fromStudent(student);
     }
 
-    public StudentPageResponseDTO findAll(int pageNumber, int pageSize) {
+    public PageResponseDTO<StudentResponseDTO> findAll(int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        Page<Student> studentsPage = repository.findAll(pageable);
-        return StudentPageResponseDTO.fromStudentPage(studentsPage);
+        Page<Student> studentsPage = repository.findAllActive(pageable);
+        return PageResponseDTO.fromPage(studentsPage, StudentResponseDTO::fromStudent);
     }
 
     @Transactional
