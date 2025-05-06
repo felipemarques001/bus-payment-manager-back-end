@@ -1,8 +1,11 @@
 package com.felipemarquesdev.bus_payment_manager.controllers;
 
+import com.felipemarquesdev.bus_payment_manager.dtos.page.PageResponseDTO;
 import com.felipemarquesdev.bus_payment_manager.dtos.payment.PaymentRequestDTO;
 import com.felipemarquesdev.bus_payment_manager.dtos.payment.PaymentResponseDTO;
+import com.felipemarquesdev.bus_payment_manager.dtos.payment.PaymentSummaryResponseDTO;
 import com.felipemarquesdev.bus_payment_manager.services.PaymentServiceImpl;
+import com.felipemarquesdev.bus_payment_manager.services.interfaces.PaymentService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +17,7 @@ import java.util.UUID;
 @RequestMapping("/api/payments")
 public class PaymentController {
 
-    private final PaymentServiceImpl service;
+    private final PaymentService service;
 
     public PaymentController(PaymentServiceImpl service) {
         this.service = service;
@@ -29,6 +32,15 @@ public class PaymentController {
     @GetMapping("/{id}")
     public ResponseEntity<PaymentResponseDTO> getById(@PathVariable(name = "id") UUID id) {
         PaymentResponseDTO responseBody = service.findById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(responseBody);
+    }
+
+    @GetMapping
+    public ResponseEntity<PageResponseDTO<PaymentSummaryResponseDTO>> getAll(
+            @RequestParam(defaultValue = "0") int pageNumber,
+            @RequestParam(defaultValue = "10") int pageSize
+    ) {
+        PageResponseDTO<PaymentSummaryResponseDTO> responseBody = service.findAll(pageNumber, pageSize);
         return ResponseEntity.status(HttpStatus.OK).body(responseBody);
     }
 }

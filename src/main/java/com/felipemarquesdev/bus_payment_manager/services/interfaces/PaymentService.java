@@ -1,7 +1,9 @@
 package com.felipemarquesdev.bus_payment_manager.services.interfaces;
 
+import com.felipemarquesdev.bus_payment_manager.dtos.page.PageResponseDTO;
 import com.felipemarquesdev.bus_payment_manager.dtos.payment.PaymentRequestDTO;
 import com.felipemarquesdev.bus_payment_manager.dtos.payment.PaymentResponseDTO;
+import com.felipemarquesdev.bus_payment_manager.dtos.payment.PaymentSummaryResponseDTO;
 import com.felipemarquesdev.bus_payment_manager.entities.Payment;
 import com.felipemarquesdev.bus_payment_manager.entities.Student;
 
@@ -18,4 +20,6 @@ public interface PaymentService {
     PaymentResponseDTO findById(UUID id);
 
     List<Student> getPaymentStudents(PaymentRequestDTO dto);
+
+    PageResponseDTO<PaymentSummaryResponseDTO> findAll(int pageNumber, int pageSize);
 }

@@ -1,7 +1,9 @@
 package com.felipemarquesdev.bus_payment_manager.services;
 
+import com.felipemarquesdev.bus_payment_manager.dtos.page.PageResponseDTO;
 import com.felipemarquesdev.bus_payment_manager.dtos.payment.PaymentRequestDTO;
 import com.felipemarquesdev.bus_payment_manager.dtos.payment.PaymentResponseDTO;
+import com.felipemarquesdev.bus_payment_manager.dtos.payment.PaymentSummaryResponseDTO;
 import com.felipemarquesdev.bus_payment_manager.entities.Payment;
 import com.felipemarquesdev.bus_payment_manager.entities.Student;
 import com.felipemarquesdev.bus_payment_manager.exceptions.ResourceNotFoundException;
@@ -11,6 +13,9 @@ import com.felipemarquesdev.bus_payment_manager.services.interfaces.PaymentCalcu
 import com.felipemarquesdev.bus_payment_manager.services.interfaces.PaymentService;
 import com.felipemarquesdev.bus_payment_manager.services.interfaces.TuitionService;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -80,5 +85,12 @@ public class PaymentServiceImpl implements PaymentService {
                 .stream()
                 .map((id) -> studentService.findActiveStudentById(UUID.fromString(id)))
                 .toList();
+    }
+
+    @Override
+    public PageResponseDTO<PaymentSummaryResponseDTO> findAll(int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Page<Payment> studentsPage = repository.findAll(pageable);
+        return PageResponseDTO.fromPage(studentsPage, PaymentSummaryResponseDTO::fromPayment);
     }
 }
