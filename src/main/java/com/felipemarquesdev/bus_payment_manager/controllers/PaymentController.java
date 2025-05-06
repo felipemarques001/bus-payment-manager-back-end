@@ -25,4 +25,10 @@ public class PaymentController {
         service.create(requestBody);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PaymentResponseDTO> getById(@PathVariable(name = "id") UUID id) {
+        PaymentResponseDTO responseBody = service.findById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(responseBody);
+    }
 }

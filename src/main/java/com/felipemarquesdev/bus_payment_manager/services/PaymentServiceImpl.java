@@ -1,8 +1,10 @@
 package com.felipemarquesdev.bus_payment_manager.services;
 
 import com.felipemarquesdev.bus_payment_manager.dtos.payment.PaymentRequestDTO;
+import com.felipemarquesdev.bus_payment_manager.dtos.payment.PaymentResponseDTO;
 import com.felipemarquesdev.bus_payment_manager.entities.Payment;
 import com.felipemarquesdev.bus_payment_manager.entities.Student;
+import com.felipemarquesdev.bus_payment_manager.exceptions.ResourceNotFoundException;
 import com.felipemarquesdev.bus_payment_manager.repositories.PaymentRepository;
 import com.felipemarquesdev.bus_payment_manager.services.interfaces.FinancialHelpService;
 import com.felipemarquesdev.bus_payment_manager.services.interfaces.PaymentCalculatorService;
@@ -62,6 +64,14 @@ public class PaymentServiceImpl implements PaymentService {
     public Payment save(PaymentRequestDTO dto, BigDecimal amountToBePaid, BigDecimal tuitionAmount) {
         Payment payment = new Payment(dto, amountToBePaid, tuitionAmount);
         return repository.save(payment);
+    }
+
+    @Override
+    public PaymentResponseDTO findById(UUID id) {
+        Payment payment = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Payment", "ID"));
+
+        return PaymentResponseDTO.fromPayment(payment);
     }
 
     @Override
