@@ -8,7 +8,9 @@ import lombok.Getter;
 public enum ErrorType {
 
     RESOURCE_NOT_FOUND("RESOURCE_NOT_FOUND"),
-    FIELD_ALREADY_IN_USE("FIELD_ALREADY_IN_USE");
+    STUDENT_NOT_ACTIVE("STUDENT_NOT_ACTIVE"),
+    FIELD_ALREADY_IN_USE("FIELD_ALREADY_IN_USE"),
+    DISCOUNT_EXCEEDS_TOTAL("DISCOUNT_EXCEEDS_TOTAL");
 
-    private String value;
+    private final String value;
 }

@@ -7,6 +7,7 @@ import com.felipemarquesdev.bus_payment_manager.dtos.student.StudentResponseDTO;
 import com.felipemarquesdev.bus_payment_manager.entities.Student;
 import com.felipemarquesdev.bus_payment_manager.exceptions.FieldAlreadyInUseException;
 import com.felipemarquesdev.bus_payment_manager.exceptions.ResourceNotFoundException;
+import com.felipemarquesdev.bus_payment_manager.exceptions.InactiveStudentException;
 import com.felipemarquesdev.bus_payment_manager.repositories.StudentRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
@@ -74,6 +75,14 @@ public class StudentService {
         Student student = findStudentById(id);
         student.setActive(dto.active());
         repository.save(student);
+    }
+
+    public Student findActiveStudentById(UUID id) {
+        Student student = findStudentById(id);
+        if (!student.getActive())
+            throw new InactiveStudentException(id);
+
+        return student;
     }
 
     private Student findStudentById(UUID id) {
