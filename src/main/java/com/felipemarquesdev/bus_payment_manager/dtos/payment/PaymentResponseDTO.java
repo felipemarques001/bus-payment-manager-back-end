@@ -2,11 +2,7 @@ package com.felipemarquesdev.bus_payment_manager.dtos.payment;
 
 import com.felipemarquesdev.bus_payment_manager.dtos.financialHelp.FinancialHelpResponseDTO;
 import com.felipemarquesdev.bus_payment_manager.dtos.tuition.TuitionResponseDTO;
-import com.felipemarquesdev.bus_payment_manager.entities.FinancialHelp;
 import com.felipemarquesdev.bus_payment_manager.entities.Payment;
-import com.felipemarquesdev.bus_payment_manager.entities.Tuition;
-import jakarta.persistence.Column;
-import jakarta.persistence.OneToMany;
 
 import java.math.BigDecimal;
 import java.util.List;

@@ -25,7 +25,7 @@ public record PageResponseDTO<T> (
                 .map(mapper)
                 .toList();
 
-        return new PageResponseDTO<T>(
+        return new PageResponseDTO<>(
                 content,
                 page.getNumber(),
                 page.getSize(),
@@ -33,5 +33,5 @@ public record PageResponseDTO<T> (
                 page.getTotalPages(),
                 page.isLast()
         );
-    };
+    }
 }
