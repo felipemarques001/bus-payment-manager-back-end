@@ -6,8 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -41,6 +43,10 @@ public class Payment {
 
     @OneToMany(mappedBy = "payment", fetch = FetchType.LAZY)
     private List<Tuition> tuitions;
+
+    @CreationTimestamp
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
     public Payment(PaymentRequestDTO dto, BigDecimal totalToBePaid, BigDecimal tuitionAmount) {
         this.month = dto.month();
