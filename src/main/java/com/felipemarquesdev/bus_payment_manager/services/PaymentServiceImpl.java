@@ -12,6 +12,7 @@ import com.felipemarquesdev.bus_payment_manager.services.interfaces.FinancialHel
 import com.felipemarquesdev.bus_payment_manager.services.interfaces.PaymentCalculatorService;
 import com.felipemarquesdev.bus_payment_manager.services.interfaces.PaymentService;
 import com.felipemarquesdev.bus_payment_manager.services.interfaces.TuitionService;
+import com.felipemarquesdev.bus_payment_manager.services.interfaces.StudentService;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

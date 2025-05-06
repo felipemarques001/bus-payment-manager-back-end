@@ -4,7 +4,7 @@ import com.felipemarquesdev.bus_payment_manager.dtos.page.PageResponseDTO;
 import com.felipemarquesdev.bus_payment_manager.dtos.student.StudentActiveRequestDTO;
 import com.felipemarquesdev.bus_payment_manager.dtos.student.StudentRequestDTO;
 import com.felipemarquesdev.bus_payment_manager.dtos.student.StudentResponseDTO;
-import com.felipemarquesdev.bus_payment_manager.services.StudentService;
+import com.felipemarquesdev.bus_payment_manager.services.interfaces.StudentService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +24,7 @@ public class StudentController {
 
     @PostMapping
     ResponseEntity<Void> create(@RequestBody @Valid StudentRequestDTO requestBody) {
-        service.create(requestBody);
+        service.save(requestBody);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 

@@ -9,6 +9,7 @@ import com.felipemarquesdev.bus_payment_manager.exceptions.FieldAlreadyInUseExce
 import com.felipemarquesdev.bus_payment_manager.exceptions.ResourceNotFoundException;
 import com.felipemarquesdev.bus_payment_manager.exceptions.InactiveStudentException;
 import com.felipemarquesdev.bus_payment_manager.repositories.StudentRepository;
+import com.felipemarquesdev.bus_payment_manager.services.interfaces.StudentService;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,16 +20,17 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class StudentService {
+public class StudentServiceImpl implements StudentService {
 
     private final StudentRepository repository;
 
-    public StudentService(StudentRepository repository) {
+    public StudentServiceImpl(StudentRepository repository) {
         this.repository = repository;
     }
 
     @Transactional
-    public void create(StudentRequestDTO dto) {
+    @Override
+    public void save(StudentRequestDTO dto) {
         if (repository.existsByPhoneNumber(dto.phoneNumber()))
             throw new FieldAlreadyInUseException("phone number");
 
@@ -36,11 +38,13 @@ public class StudentService {
         repository.save(newStudent);
     }
 
+    @Override
     public StudentResponseDTO findById(UUID id) {
         Student student = findStudentById(id);
         return StudentResponseDTO.fromStudent(student);
     }
 
+    @Override
     public PageResponseDTO<StudentResponseDTO> findAll(int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         Page<Student> studentsPage = repository.findAllActive(pageable);
@@ -48,6 +52,7 @@ public class StudentService {
     }
 
     @Transactional
+    @Override
     public StudentResponseDTO update(UUID id, StudentRequestDTO dto) {
         Student student = findStudentById(id);
 
@@ -65,18 +70,21 @@ public class StudentService {
     }
 
     @Transactional
+    @Override
     public void delete(UUID id) {
         Student student = findStudentById(id);
         repository.delete(student);
     }
 
     @Transactional
+    @Override
     public void updateActiveStatus(UUID id, StudentActiveRequestDTO dto) {
         Student student = findStudentById(id);
         student.setActive(dto.active());
         repository.save(student);
     }
 
+    @Override
     public Student findActiveStudentById(UUID id) {
         Student student = findStudentById(id);
         if (!student.getActive())
