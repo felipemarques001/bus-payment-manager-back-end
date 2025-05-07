@@ -27,4 +27,12 @@ public class TuitionController {
         service.updateToPaid(id, requestBody);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
+    @PatchMapping("/{id}/not-paid")
+    public ResponseEntity<Void> patchAsNotPaid(
+            @PathVariable(name = "id") UUID id
+    ) {
+        service.updateToNotPaid(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }

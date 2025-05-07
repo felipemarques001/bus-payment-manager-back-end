@@ -42,6 +42,14 @@ public class TuitionServiceImpl implements TuitionService {
         repository.save(tuition);
     }
 
+    @Override
+    public void updateToNotPaid(UUID id) {
+        Tuition tuition = getTuitionById(id);
+        tuition.setPaymentType(null);
+        tuition.setIsPaid(false);
+        repository.save(tuition);
+    }
+
     private Tuition getTuitionById(UUID id) {
         return repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Tuition", "ID"));

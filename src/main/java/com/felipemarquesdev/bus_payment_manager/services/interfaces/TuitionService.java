@@ -12,4 +12,6 @@ public interface TuitionService {
     void saveAll(Payment payment, List<Student> students);
 
     void updateToPaid(UUID id, TuitionPaidRequestDTO dto);
+
+    void updateToNotPaid(UUID id);
 }
