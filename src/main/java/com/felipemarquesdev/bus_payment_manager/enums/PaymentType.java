@@ -9,6 +9,7 @@ public enum PaymentType {
 
     PIX("PIX"),
     CARD("CARD"),
+    BILLET("BILLET"),
     CASH_PAYMENT("CASH_PAYMENT");
 
     private final String value;
