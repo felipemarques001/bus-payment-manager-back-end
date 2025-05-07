@@ -11,6 +11,7 @@ import com.felipemarquesdev.bus_payment_manager.services.interfaces.TuitionServi
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -39,6 +40,7 @@ public class TuitionServiceImpl implements TuitionService {
         PaymentType paymentType = PaymentType.valueOf(dto.paymentType());
         tuition.setPaymentType(paymentType);
         tuition.setIsPaid(true);
+        tuition.setPaidAt(LocalDateTime.now());
         repository.save(tuition);
     }
 
@@ -47,6 +49,7 @@ public class TuitionServiceImpl implements TuitionService {
         Tuition tuition = getTuitionById(id);
         tuition.setPaymentType(null);
         tuition.setIsPaid(false);
+        tuition.setPaidAt(null);
         repository.save(tuition);
     }
 

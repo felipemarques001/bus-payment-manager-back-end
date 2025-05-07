@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
@@ -27,6 +28,9 @@ public class Tuition {
     @Column(name = "is_paid")
     private Boolean isPaid;
 
+    @Column(name = "paid_at")
+    private LocalDateTime paidAt;
+
     @ManyToOne
     @JoinColumn(name = "payment_id")
     private Payment payment;
@@ -38,6 +42,7 @@ public class Tuition {
     public Tuition(Payment payment, Student student) {
         this.paymentType = null;
         this.isPaid = false;
+        this.paidAt = null;
         this.payment = payment;
         this.student = student;
     }
