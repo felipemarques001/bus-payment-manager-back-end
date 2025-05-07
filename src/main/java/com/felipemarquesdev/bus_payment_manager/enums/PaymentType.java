@@ -11,5 +11,5 @@ public enum PaymentType {
     CARD("CARD"),
     CASH_PAYMENT("CASH_PAYMENT");
 
-    private String value;
+    private final String value;
 }
