@@ -7,5 +7,5 @@ public interface PaymentCalculatorService {
 
     BigDecimal calculateAmountToBePaid(BigDecimal totalAmount, List<BigDecimal> financialHelpAmounts);
 
-    BigDecimal calculateTuitionAmount(BigDecimal amountToBePaid, BigDecimal studentsQuantity);
+    BigDecimal calculateTuitionAmount(BigDecimal amountToBePaid, Integer studentsQuantity);
 }

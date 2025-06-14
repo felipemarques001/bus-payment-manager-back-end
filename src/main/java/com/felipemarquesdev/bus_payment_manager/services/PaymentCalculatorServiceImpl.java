@@ -24,7 +24,8 @@ public class PaymentCalculatorServiceImpl implements PaymentCalculatorService {
     }
 
     @Override
-    public BigDecimal calculateTuitionAmount(BigDecimal amountToBePaid, BigDecimal studentsQuantity) {
-        return amountToBePaid.divide(studentsQuantity, 2, RoundingMode.UP);
+    public BigDecimal calculateTuitionAmount(BigDecimal amountToBePaid, Integer studentsQuantity) {
+        BigDecimal studentsQuantityAsBigDecimal = new BigDecimal(Integer.toString(studentsQuantity));
+        return amountToBePaid.divide(studentsQuantityAsBigDecimal, 2, RoundingMode.UP);
     }
 }

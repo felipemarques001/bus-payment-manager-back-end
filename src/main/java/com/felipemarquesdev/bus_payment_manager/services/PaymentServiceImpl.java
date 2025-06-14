@@ -1,9 +1,8 @@
 package com.felipemarquesdev.bus_payment_manager.services;
 
+import com.felipemarquesdev.bus_payment_manager.dtos.financialHelp.FinancialHelpRequestDTO;
 import com.felipemarquesdev.bus_payment_manager.dtos.page.PageResponseDTO;
-import com.felipemarquesdev.bus_payment_manager.dtos.payment.PaymentRequestDTO;
-import com.felipemarquesdev.bus_payment_manager.dtos.payment.PaymentResponseDTO;
-import com.felipemarquesdev.bus_payment_manager.dtos.payment.PaymentSummaryResponseDTO;
+import com.felipemarquesdev.bus_payment_manager.dtos.payment.*;
 import com.felipemarquesdev.bus_payment_manager.entities.Payment;
 import com.felipemarquesdev.bus_payment_manager.entities.Student;
 import com.felipemarquesdev.bus_payment_manager.exceptions.ResourceNotFoundException;
@@ -53,23 +52,14 @@ public class PaymentServiceImpl implements PaymentService {
     @Transactional
     @Override
     public void create(PaymentRequestDTO dto) {
-        List<BigDecimal> amountsToBeDiscounted = financialHelpService.getAmountsToBeDiscounted(dto.financialHelps());
-        BigDecimal amountToBePaid = paymentCalculatorService.calculateAmountToBePaid(dto.totalAmount(), amountsToBeDiscounted);
-
         List<Student> students = getPaymentStudents(dto);
-        BigDecimal studentsQuantity = new BigDecimal(Integer.toString(students.size()));
-        BigDecimal tuitionAmount = paymentCalculatorService.calculateTuitionAmount(amountToBePaid, studentsQuantity);
+        BigDecimal amountToBePaid = calculateAmountToBePaid(dto.financialHelps(), dto.totalAmount());
+        BigDecimal tuitionAmount = calculateTuitionAmount(amountToBePaid, students.size());
 
-        Payment payment = save(dto, amountToBePaid, tuitionAmount);
-        financialHelpService.saveAll(payment, dto.financialHelps());
-        tuitionService.saveAll(payment, students);
-    }
-
-    @Transactional
-    @Override
-    public Payment save(PaymentRequestDTO dto, BigDecimal amountToBePaid, BigDecimal tuitionAmount) {
         Payment payment = new Payment(dto, amountToBePaid, tuitionAmount);
-        return repository.save(payment);
+        Payment savedPayment = repository.save(payment);
+        financialHelpService.saveAll(savedPayment, dto.financialHelps());
+        tuitionService.saveAll(savedPayment, students);
     }
 
     @Override
@@ -93,5 +83,27 @@ public class PaymentServiceImpl implements PaymentService {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         Page<Payment> studentsPage = repository.findAll(pageable);
         return PageResponseDTO.fromPage(studentsPage, PaymentSummaryResponseDTO::fromPayment);
+    }
+
+    @Override
+    public PaymentAmountsResponseDTO calculateAmounts(PaymentAmountsRequestDTO dto) {
+        BigDecimal amountToBePaid = calculateAmountToBePaid(dto.financialHelps(), dto.totalAmount());
+        BigDecimal tuitionAmount = calculateTuitionAmount(amountToBePaid, dto.studentsQuantity());
+
+        return new PaymentAmountsResponseDTO(
+                dto.totalAmount(),
+                amountToBePaid,
+                dto.studentsQuantity(),
+                tuitionAmount
+        );
+    }
+
+    private BigDecimal calculateAmountToBePaid(List<FinancialHelpRequestDTO> financialHelps, BigDecimal totalAmount) {
+        List<BigDecimal> amountsToBeDiscounted = financialHelpService.getAmountsToBeDiscounted(financialHelps);
+        return paymentCalculatorService.calculateAmountToBePaid(totalAmount, amountsToBeDiscounted);
+    }
+
+    private BigDecimal calculateTuitionAmount(BigDecimal amountToBePaid, Integer studentsQuantity) {
+        return paymentCalculatorService.calculateTuitionAmount(amountToBePaid, studentsQuantity);
     }
 }

@@ -1,9 +1,7 @@
 package com.felipemarquesdev.bus_payment_manager.controllers;
 
 import com.felipemarquesdev.bus_payment_manager.dtos.page.PageResponseDTO;
-import com.felipemarquesdev.bus_payment_manager.dtos.payment.PaymentRequestDTO;
-import com.felipemarquesdev.bus_payment_manager.dtos.payment.PaymentResponseDTO;
-import com.felipemarquesdev.bus_payment_manager.dtos.payment.PaymentSummaryResponseDTO;
+import com.felipemarquesdev.bus_payment_manager.dtos.payment.*;
 import com.felipemarquesdev.bus_payment_manager.services.PaymentServiceImpl;
 import com.felipemarquesdev.bus_payment_manager.services.interfaces.PaymentService;
 import jakarta.validation.Valid;
@@ -41,6 +39,14 @@ public class PaymentController {
             @RequestParam(defaultValue = "10") int pageSize
     ) {
         PageResponseDTO<PaymentSummaryResponseDTO> responseBody = service.findAll(pageNumber, pageSize);
+        return ResponseEntity.status(HttpStatus.OK).body(responseBody);
+    }
+
+    @PostMapping("/calculate-amounts")
+    public ResponseEntity<PaymentAmountsResponseDTO> calculateAmounts(
+            @RequestBody @Valid PaymentAmountsRequestDTO requestBody
+    ) {
+        PaymentAmountsResponseDTO responseBody = service.calculateAmounts(requestBody);
         return ResponseEntity.status(HttpStatus.OK).body(responseBody);
     }
 }
