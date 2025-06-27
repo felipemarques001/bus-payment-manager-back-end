@@ -7,6 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ErrorType {
 
+    BAD_REQUEST_VALUE("BAD_REQUEST_VALUE"),
     RESOURCE_NOT_FOUND("RESOURCE_NOT_FOUND"),
     STUDENT_NOT_ACTIVE("STUDENT_NOT_ACTIVE"),
     FIELD_ALREADY_IN_USE("FIELD_ALREADY_IN_USE"),

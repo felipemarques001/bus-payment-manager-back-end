@@ -1,10 +1,7 @@
 package com.felipemarquesdev.bus_payment_manager.exceptions.handler;
 
 import com.felipemarquesdev.bus_payment_manager.enums.ErrorType;
-import com.felipemarquesdev.bus_payment_manager.exceptions.DiscountExceedsTotalException;
-import com.felipemarquesdev.bus_payment_manager.exceptions.FieldAlreadyInUseException;
-import com.felipemarquesdev.bus_payment_manager.exceptions.ResourceNotFoundException;
-import com.felipemarquesdev.bus_payment_manager.exceptions.InactiveStudentException;
+import com.felipemarquesdev.bus_payment_manager.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -58,6 +55,14 @@ public class GlobalExceptionHandler {
     protected ResponseEntity<Map<String, String>> handleStudentNotActiveException(InactiveStudentException ex) {
         Map<String, String> error = new HashMap<>();
         error.put("errorType", ErrorType.STUDENT_NOT_ACTIVE.getValue());
+        error.put("message", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    @ExceptionHandler(BadRequestValueException.class)
+    protected ResponseEntity<Map<String, String>> handleBadRequestValueException(BadRequestValueException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("errorType", ErrorType.BAD_REQUEST_VALUE.getValue());
         error.put("message", ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }

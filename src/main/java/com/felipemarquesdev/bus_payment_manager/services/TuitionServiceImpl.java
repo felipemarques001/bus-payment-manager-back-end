@@ -1,6 +1,7 @@
 package com.felipemarquesdev.bus_payment_manager.services;
 
 import com.felipemarquesdev.bus_payment_manager.dtos.tuition.TuitionPaidRequestDTO;
+import com.felipemarquesdev.bus_payment_manager.dtos.tuition.TuitionResponseDTO;
 import com.felipemarquesdev.bus_payment_manager.entities.Payment;
 import com.felipemarquesdev.bus_payment_manager.entities.Student;
 import com.felipemarquesdev.bus_payment_manager.entities.Tuition;
@@ -35,22 +36,24 @@ public class TuitionServiceImpl implements TuitionService {
     }
 
     @Override
-    public void updateToPaid(UUID id, TuitionPaidRequestDTO dto) {
+    public TuitionResponseDTO updateToPaid(UUID id, TuitionPaidRequestDTO dto) {
         Tuition tuition = getTuitionById(id);
         PaymentType paymentType = PaymentType.valueOf(dto.paymentType());
         tuition.setPaymentType(paymentType);
         tuition.setIsPaid(true);
         tuition.setPaidAt(LocalDateTime.now());
-        repository.save(tuition);
+        Tuition updatedTuition = repository.save(tuition);
+        return TuitionResponseDTO.fromTuition(updatedTuition);
     }
 
     @Override
-    public void updateToNotPaid(UUID id) {
+    public TuitionResponseDTO updateToNotPaid(UUID id) {
         Tuition tuition = getTuitionById(id);
         tuition.setPaymentType(null);
         tuition.setIsPaid(false);
         tuition.setPaidAt(null);
-        repository.save(tuition);
+        Tuition updatedTuition = repository.save(tuition);
+        return TuitionResponseDTO.fromTuition(updatedTuition);
     }
 
     private Tuition getTuitionById(UUID id) {

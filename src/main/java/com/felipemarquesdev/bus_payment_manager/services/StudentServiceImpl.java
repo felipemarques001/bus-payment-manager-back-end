@@ -4,7 +4,9 @@ import com.felipemarquesdev.bus_payment_manager.dtos.page.PageResponseDTO;
 import com.felipemarquesdev.bus_payment_manager.dtos.student.StudentActiveRequestDTO;
 import com.felipemarquesdev.bus_payment_manager.dtos.student.StudentRequestDTO;
 import com.felipemarquesdev.bus_payment_manager.dtos.student.StudentResponseDTO;
+import com.felipemarquesdev.bus_payment_manager.dtos.student.StudentsForPaymentResponseDTO;
 import com.felipemarquesdev.bus_payment_manager.entities.Student;
+import com.felipemarquesdev.bus_payment_manager.exceptions.BadRequestValueException;
 import com.felipemarquesdev.bus_payment_manager.exceptions.FieldAlreadyInUseException;
 import com.felipemarquesdev.bus_payment_manager.exceptions.ResourceNotFoundException;
 import com.felipemarquesdev.bus_payment_manager.exceptions.InactiveStudentException;
@@ -14,8 +16,10 @@ import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -30,7 +34,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Transactional
     @Override
-    public void save(StudentRequestDTO dto) {
+    public void create(StudentRequestDTO dto) {
         if (repository.existsByPhoneNumber(dto.phoneNumber()))
             throw new FieldAlreadyInUseException("phone number");
 
@@ -45,10 +49,16 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public PageResponseDTO<StudentResponseDTO> findAll(int pageNumber, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        Page<Student> studentsPage = repository.findAllActive(pageable);
+    public PageResponseDTO<StudentResponseDTO> findAll(int pageNumber, int pageSize, boolean active) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("name").ascending());
+        Page<Student> studentsPage = repository.findAll(pageable, active);
         return PageResponseDTO.fromPage(studentsPage, StudentResponseDTO::fromStudent);
+    }
+
+    @Override
+    public StudentsForPaymentResponseDTO findAllForPayment() {
+        List<Student> students = repository.findAllByActive(true, Sort.by("name"));
+        return StudentsForPaymentResponseDTO.fromStudents(students);
     }
 
     @Transactional
@@ -91,6 +101,14 @@ public class StudentServiceImpl implements StudentService {
             throw new InactiveStudentException(id);
 
         return student;
+    }
+
+    @Override
+    public boolean checkPhoneNumberExists(String phoneNumber) {
+        if (phoneNumber == null || phoneNumber.length() != 11)
+            throw new BadRequestValueException("The phone number must contain a maximum of 11 characters long");
+
+        return repository.existsByPhoneNumber(phoneNumber);
     }
 
     private Student findStudentById(UUID id) {

@@ -1,6 +1,7 @@
 package com.felipemarquesdev.bus_payment_manager.controllers;
 
 import com.felipemarquesdev.bus_payment_manager.dtos.tuition.TuitionPaidRequestDTO;
+import com.felipemarquesdev.bus_payment_manager.dtos.tuition.TuitionResponseDTO;
 import com.felipemarquesdev.bus_payment_manager.services.interfaces.TuitionService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -20,19 +21,19 @@ public class TuitionController {
     }
 
     @PatchMapping("/{id}/paid")
-    public ResponseEntity<Void> patchAsPaid(
+    public ResponseEntity<TuitionResponseDTO> patchAsPaid(
             @PathVariable(name = "id") UUID id,
             @RequestBody @Valid TuitionPaidRequestDTO requestBody
     ) {
-        service.updateToPaid(id, requestBody);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        TuitionResponseDTO responseBody = service.updateToPaid(id, requestBody);
+        return ResponseEntity.status(HttpStatus.OK).body(responseBody);
     }
 
     @PatchMapping("/{id}/not-paid")
-    public ResponseEntity<Void> patchAsNotPaid(
+    public ResponseEntity<TuitionResponseDTO> patchAsNotPaid(
             @PathVariable(name = "id") UUID id
     ) {
-        service.updateToNotPaid(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        TuitionResponseDTO responseBody = service.updateToNotPaid(id);
+        return ResponseEntity.status(HttpStatus.OK).body(responseBody);
     }
 }

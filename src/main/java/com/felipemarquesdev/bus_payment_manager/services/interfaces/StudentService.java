@@ -4,17 +4,20 @@ import com.felipemarquesdev.bus_payment_manager.dtos.page.PageResponseDTO;
 import com.felipemarquesdev.bus_payment_manager.dtos.student.StudentActiveRequestDTO;
 import com.felipemarquesdev.bus_payment_manager.dtos.student.StudentRequestDTO;
 import com.felipemarquesdev.bus_payment_manager.dtos.student.StudentResponseDTO;
+import com.felipemarquesdev.bus_payment_manager.dtos.student.StudentsForPaymentResponseDTO;
 import com.felipemarquesdev.bus_payment_manager.entities.Student;
 
 import java.util.UUID;
 
 public interface StudentService {
 
-    void save(StudentRequestDTO dto);
+    void create(StudentRequestDTO dto);
 
     StudentResponseDTO findById(UUID id);
 
-    PageResponseDTO<StudentResponseDTO> findAll(int pageNumber, int pageSize);
+    StudentsForPaymentResponseDTO findAllForPayment();
+
+    PageResponseDTO<StudentResponseDTO> findAll(int pageNumber, int pageSize, boolean active);
 
     StudentResponseDTO update(UUID id, StudentRequestDTO dto);
 
@@ -23,4 +26,6 @@ public interface StudentService {
     void updateActiveStatus(UUID id, StudentActiveRequestDTO dto);
 
     Student findActiveStudentById(UUID id);
+
+    boolean checkPhoneNumberExists(String phoneNumber);
 }
