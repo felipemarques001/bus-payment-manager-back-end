@@ -3,6 +3,7 @@ package com.felipemarquesdev.bus_payment_manager.dtos.tuition;
 import com.felipemarquesdev.bus_payment_manager.dtos.student.StudentResponseDTO;
 import com.felipemarquesdev.bus_payment_manager.entities.Tuition;
 import com.felipemarquesdev.bus_payment_manager.enums.PaymentType;
+import com.felipemarquesdev.bus_payment_manager.enums.TuitionStatus;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -13,7 +14,7 @@ public record TuitionResponseDTO(
 
         PaymentType paymentType,
 
-        Boolean isPaid,
+        TuitionStatus status,
 
         LocalDateTime paidAt,
 
@@ -24,7 +25,7 @@ public record TuitionResponseDTO(
         return new TuitionResponseDTO(
                 tuition.getId(),
                 tuition.getPaymentType(),
-                tuition.getIsPaid(),
+                tuition.getStatus(),
                 tuition.getPaidAt(),
                 StudentResponseDTO.fromStudent(tuition.getStudent())
         );

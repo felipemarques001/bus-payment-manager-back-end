@@ -1,6 +1,7 @@
 package com.felipemarquesdev.bus_payment_manager.entities;
 
 import com.felipemarquesdev.bus_payment_manager.enums.PaymentType;
+import com.felipemarquesdev.bus_payment_manager.enums.TuitionStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,11 +23,12 @@ public class Tuition {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @Column(name = "payment_type")
     @Enumerated(EnumType.STRING)
     private PaymentType paymentType;
 
-    @Column(name = "is_paid")
-    private Boolean isPaid;
+    @Enumerated(EnumType.STRING)
+    private TuitionStatus status;
 
     @Column(name = "paid_at")
     private LocalDateTime paidAt;
@@ -41,7 +43,7 @@ public class Tuition {
 
     public Tuition(Payment payment, Student student) {
         this.paymentType = null;
-        this.isPaid = false;
+        this.status = TuitionStatus.PENDING;
         this.paidAt = null;
         this.payment = payment;
         this.student = student;
