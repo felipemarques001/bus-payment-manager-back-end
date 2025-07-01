@@ -17,5 +17,5 @@ public interface TuitionService {
 
     TuitionResponseDTO updateToPaid(UUID id, TuitionPaidRequestDTO dto);
 
-    TuitionResponseDTO updateToNotPaid(UUID id);
+    TuitionResponseDTO updateToPending(UUID id);
 }

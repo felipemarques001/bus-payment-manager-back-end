@@ -33,7 +33,7 @@ public class TuitionController {
     }
 
     @PatchMapping("/{id}/paid")
-    public ResponseEntity<TuitionResponseDTO> patchAsPaid(
+    public ResponseEntity<TuitionResponseDTO> patchToPaid(
             @PathVariable(name = "id") UUID id,
             @RequestBody @Valid TuitionPaidRequestDTO requestBody
     ) {
@@ -41,11 +41,11 @@ public class TuitionController {
         return ResponseEntity.status(HttpStatus.OK).body(responseBody);
     }
 
-    @PatchMapping("/{id}/not-paid")
-    public ResponseEntity<TuitionResponseDTO> patchAsNotPaid(
+    @PatchMapping("/{id}/pending")
+    public ResponseEntity<TuitionResponseDTO> patchToPending(
             @PathVariable(name = "id") UUID id
     ) {
-        TuitionResponseDTO responseBody = service.updateToNotPaid(id);
+        TuitionResponseDTO responseBody = service.updateToPending(id);
         return ResponseEntity.status(HttpStatus.OK).body(responseBody);
     }
 }

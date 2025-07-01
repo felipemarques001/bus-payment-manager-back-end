@@ -56,7 +56,7 @@ public class TuitionServiceImpl implements TuitionService {
     }
 
     @Override
-    public TuitionResponseDTO updateToNotPaid(UUID id) {
+    public TuitionResponseDTO updateToPending(UUID id) {
         Tuition tuition = getTuitionById(id);
         tuition.setPaymentType(null);
         tuition.setStatus(TuitionStatus.PENDING);
