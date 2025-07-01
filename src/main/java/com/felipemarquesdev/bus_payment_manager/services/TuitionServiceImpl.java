@@ -6,6 +6,7 @@ import com.felipemarquesdev.bus_payment_manager.entities.Payment;
 import com.felipemarquesdev.bus_payment_manager.entities.Student;
 import com.felipemarquesdev.bus_payment_manager.entities.Tuition;
 import com.felipemarquesdev.bus_payment_manager.enums.PaymentType;
+import com.felipemarquesdev.bus_payment_manager.enums.TuitionStatus;
 import com.felipemarquesdev.bus_payment_manager.exceptions.ResourceNotFoundException;
 import com.felipemarquesdev.bus_payment_manager.repositories.TuitionRepository;
 import com.felipemarquesdev.bus_payment_manager.services.interfaces.TuitionService;
@@ -25,6 +26,14 @@ public class TuitionServiceImpl implements TuitionService {
         this.repository = repository;
     }
 
+    @Override
+    public List<TuitionResponseDTO> findAllByPaymentIdAndStatus(UUID paymentId, TuitionStatus status) {
+        List<Tuition> tuition = repository.findAllByPaymentIdAndStatus(paymentId, status);
+        return tuition.stream()
+                .map((TuitionResponseDTO::fromTuition))
+                .toList();
+    }
+
     @Transactional
     @Override
     public void saveAll(Payment payment, List<Student> students) {
@@ -40,7 +49,7 @@ public class TuitionServiceImpl implements TuitionService {
         Tuition tuition = getTuitionById(id);
         PaymentType paymentType = PaymentType.valueOf(dto.paymentType());
         tuition.setPaymentType(paymentType);
-        tuition.setIsPaid(true);
+        tuition.setStatus(TuitionStatus.PAID);
         tuition.setPaidAt(LocalDateTime.now());
         Tuition updatedTuition = repository.save(tuition);
         return TuitionResponseDTO.fromTuition(updatedTuition);
@@ -50,7 +59,7 @@ public class TuitionServiceImpl implements TuitionService {
     public TuitionResponseDTO updateToNotPaid(UUID id) {
         Tuition tuition = getTuitionById(id);
         tuition.setPaymentType(null);
-        tuition.setIsPaid(false);
+        tuition.setStatus(TuitionStatus.PENDING);
         tuition.setPaidAt(null);
         Tuition updatedTuition = repository.save(tuition);
         return TuitionResponseDTO.fromTuition(updatedTuition);
