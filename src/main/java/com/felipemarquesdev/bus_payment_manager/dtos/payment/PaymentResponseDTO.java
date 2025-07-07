@@ -1,7 +1,6 @@
 package com.felipemarquesdev.bus_payment_manager.dtos.payment;
 
 import com.felipemarquesdev.bus_payment_manager.dtos.financialHelp.FinancialHelpResponseDTO;
-import com.felipemarquesdev.bus_payment_manager.dtos.tuition.TuitionResponseDTO;
 import com.felipemarquesdev.bus_payment_manager.entities.Payment;
 
 import java.math.BigDecimal;
@@ -22,20 +21,13 @@ public record PaymentResponseDTO(
 
         BigDecimal tuitionAmount,
 
-        List<FinancialHelpResponseDTO> financialHelps,
-
-        List<TuitionResponseDTO> tuitions
-) { 
+        List<FinancialHelpResponseDTO> financialHelps
+) {
     
     public static PaymentResponseDTO fromPayment(Payment payment) {
         List<FinancialHelpResponseDTO> financialHelps = payment.getFinancialHelps()
                 .stream()
                 .map(FinancialHelpResponseDTO::fromFinancialHelp)
-                .toList();
-
-        List<TuitionResponseDTO> tuitions = payment.getTuitions()
-                .stream()
-                .map(TuitionResponseDTO::fromTuition)
                 .toList();
 
         return new PaymentResponseDTO(
@@ -45,8 +37,7 @@ public record PaymentResponseDTO(
                 payment.getTotalAmount(),
                 payment.getTotalToBePaid(),
                 payment.getTuitionAmount(),
-                financialHelps,
-                tuitions
+                financialHelps
         );
     }
 }

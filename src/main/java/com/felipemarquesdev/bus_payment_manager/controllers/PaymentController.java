@@ -30,7 +30,6 @@ public class PaymentController {
     @GetMapping("/{id}")
     public ResponseEntity<PaymentResponseDTO> getById(@PathVariable(name = "id") UUID id) {
         PaymentResponseDTO responseBody = service.findById(id);
-        System.out.println("CHAMOU");
         return ResponseEntity.status(HttpStatus.OK).body(responseBody);
     }
 
