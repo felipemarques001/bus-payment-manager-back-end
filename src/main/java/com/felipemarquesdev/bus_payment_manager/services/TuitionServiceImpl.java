@@ -7,6 +7,7 @@ import com.felipemarquesdev.bus_payment_manager.entities.Student;
 import com.felipemarquesdev.bus_payment_manager.entities.Tuition;
 import com.felipemarquesdev.bus_payment_manager.enums.PaymentType;
 import com.felipemarquesdev.bus_payment_manager.enums.TuitionStatus;
+import com.felipemarquesdev.bus_payment_manager.exceptions.BadRequestValueException;
 import com.felipemarquesdev.bus_payment_manager.exceptions.ResourceNotFoundException;
 import com.felipemarquesdev.bus_payment_manager.repositories.TuitionRepository;
 import com.felipemarquesdev.bus_payment_manager.services.interfaces.TuitionService;
@@ -14,6 +15,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,8 +30,16 @@ public class TuitionServiceImpl implements TuitionService {
 
     @Override
     public List<TuitionResponseDTO> findAllByPaymentIdAndStatus(UUID paymentId, TuitionStatus status) {
-        List<Tuition> tuition = repository.findAllByPaymentIdAndStatus(paymentId, status);
-        return tuition.stream()
+        List<Tuition> tuitionList = repository.findAllByPaymentIdAndStatus(paymentId, status)
+                .stream()
+                .sorted(Comparator.comparing(tuition -> tuition.getStudent().getName()))
+                .toList();
+
+        if (tuitionList.isEmpty()) {
+            throw new BadRequestValueException("Invalid payment ID!");
+        }
+
+        return tuitionList.stream()
                 .map((TuitionResponseDTO::fromTuition))
                 .toList();
     }
