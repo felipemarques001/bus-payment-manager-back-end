@@ -4,6 +4,7 @@ import com.felipemarquesdev.bus_payment_manager.enums.ErrorType;
 import com.felipemarquesdev.bus_payment_manager.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -65,5 +66,13 @@ public class GlobalExceptionHandler {
         error.put("errorType", ErrorType.BAD_REQUEST_VALUE.getValue());
         error.put("message", ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    @ExceptionHandler({ UserNotFoundException.class, BadCredentialsException.class })
+    protected ResponseEntity<Map<String, String>> handleAuthExceptions(RuntimeException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("errorType", ErrorType.BAD_CREDENTIALS.getValue());
+        error.put("message", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
 }
