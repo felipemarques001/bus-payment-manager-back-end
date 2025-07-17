@@ -2,7 +2,6 @@ package com.felipemarquesdev.bus_payment_manager.controllers;
 
 import com.felipemarquesdev.bus_payment_manager.dtos.page.PageResponseDTO;
 import com.felipemarquesdev.bus_payment_manager.dtos.payment.*;
-import com.felipemarquesdev.bus_payment_manager.services.PaymentServiceImpl;
 import com.felipemarquesdev.bus_payment_manager.services.interfaces.PaymentService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -17,7 +16,7 @@ public class PaymentController {
 
     private final PaymentService service;
 
-    public PaymentController(PaymentServiceImpl service) {
+    public PaymentController(PaymentService service) {
         this.service = service;
     }
 
