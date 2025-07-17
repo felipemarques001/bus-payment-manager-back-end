@@ -6,7 +6,6 @@ import com.felipemarquesdev.bus_payment_manager.dtos.student.StudentRequestDTO;
 import com.felipemarquesdev.bus_payment_manager.dtos.student.StudentResponseDTO;
 import com.felipemarquesdev.bus_payment_manager.dtos.student.StudentsForPaymentResponseDTO;
 import com.felipemarquesdev.bus_payment_manager.entities.Student;
-import com.felipemarquesdev.bus_payment_manager.entities.Tuition;
 import com.felipemarquesdev.bus_payment_manager.exceptions.BadRequestValueException;
 import com.felipemarquesdev.bus_payment_manager.exceptions.FieldAlreadyInUseException;
 import com.felipemarquesdev.bus_payment_manager.exceptions.InactiveStudentException;
@@ -25,13 +24,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.ArgumentMatchers.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 public class StudentServiceImplTest {
 
@@ -358,7 +353,7 @@ public class StudentServiceImplTest {
         boolean existPhoneNumber = studentService.checkPhoneNumberExists(firstStudent.getPhoneNumber());
 
         // Then
-        assertEquals(true, existPhoneNumber);
+        assertTrue(existPhoneNumber);
     }
 
     @Test
@@ -369,7 +364,7 @@ public class StudentServiceImplTest {
 
         // When
         try {
-            boolean existPhoneNumber = studentService.checkPhoneNumberExists(invalidPhoneNumber);
+            studentService.checkPhoneNumberExists(invalidPhoneNumber);
         } catch (RuntimeException ex) {
             // Then
             assertEquals(BadRequestValueException.class, ex.getClass());
