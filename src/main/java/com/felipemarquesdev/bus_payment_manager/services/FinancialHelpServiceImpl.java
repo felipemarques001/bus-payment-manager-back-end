@@ -12,11 +12,11 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Service
-public class FinancialHelpImpl implements FinancialHelpService {
+public class FinancialHelpServiceImpl implements FinancialHelpService {
 
     private final FinancialHelpRepository repository;
 
-    public FinancialHelpImpl(FinancialHelpRepository repository) {
+    public FinancialHelpServiceImpl(FinancialHelpRepository repository) {
         this.repository = repository;
     }
 
