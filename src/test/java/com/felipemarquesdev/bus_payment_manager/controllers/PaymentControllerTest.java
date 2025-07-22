@@ -110,6 +110,125 @@ public class PaymentControllerTest {
     }
 
     @Test
+    @DisplayName("Given empty or null fields, when create(), then return 400 and error data")
+    void createFailCaseByEmptyOrNullFields() throws Exception {
+        // Given
+        String emptyFieldErrorMessage = "This field cannot be empty";
+        String nullFieldErrorMessage = "This field cannot be null";
+        FinancialHelpRequestDTO financialHelpRequestDTO = new FinancialHelpRequestDTO(
+                "",
+                null
+        );
+
+        PaymentRequestDTO paymentRequestDTO = new PaymentRequestDTO(
+                "",
+                "",
+                null,
+                List.of(financialHelpRequestDTO),
+                List.of()
+        );
+
+        // When and Then
+        mockMvc.perform(post(ENDPOINT)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(paymentRequestDTO)))
+
+
+
+         .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.month").value(emptyFieldErrorMessage))
+                .andExpect(jsonPath("$.year").value(emptyFieldErrorMessage))
+                .andExpect(jsonPath("$.totalAmount").value(nullFieldErrorMessage))
+                .andExpect(jsonPath("$['financialHelps[0].name']").value(emptyFieldErrorMessage))
+                .andExpect(jsonPath("$['financialHelps[0].amount']").value(nullFieldErrorMessage))
+                .andExpect(jsonPath("$.studentsIds").value("must not be empty"));
+    }
+
+    @Test
+    @DisplayName("Given large fields, when create(), then return 400 and error data")
+    void createFailCaseByLargeFields() throws Exception {
+        // Given
+        String largeMonthErrorMessage = "The month must contain a maximum of 9 characters long";
+        String largeYearErrorMessage = "The year must contain a maximum of 4 characters long";
+        String largeBigDecimalErrorMessage = "This field must contain a maximum of 6 integers and 2 fractional digits";
+        FinancialHelpRequestDTO financialHelpRequestDTO = new FinancialHelpRequestDTO(
+                "test",
+                new BigDecimal("9999999999.999")
+        );
+
+        PaymentRequestDTO paymentRequestDTO = new PaymentRequestDTO(
+                "test-test-test",
+                "test-test-test",
+                new BigDecimal("9999999999.999"),
+                List.of(financialHelpRequestDTO),
+                List.of(UUID.randomUUID().toString())
+        );
+
+        // When and Then
+        mockMvc.perform(post(ENDPOINT)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(paymentRequestDTO)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.month").value(largeMonthErrorMessage))
+                .andExpect(jsonPath("$.year").value(largeYearErrorMessage))
+                .andExpect(jsonPath("$.totalAmount").value(largeBigDecimalErrorMessage))
+                .andExpect(jsonPath("$['financialHelps[0].amount']").value(largeBigDecimalErrorMessage));
+    }
+
+    @Test
+    @DisplayName("Given negative fields, when create(), then return 400 and error data")
+    void createFailCaseByNegativeFields() throws Exception {
+        // Given
+        String errorMessage = "This field must be greater than zero";
+        FinancialHelpRequestDTO financialHelpRequestDTO = new FinancialHelpRequestDTO(
+                "test",
+                new BigDecimal("-1.00")
+        );
+
+        PaymentRequestDTO paymentRequestDTO = new PaymentRequestDTO(
+                "january",
+                "2005",
+                new BigDecimal("-33.00"),
+                List.of(financialHelpRequestDTO),
+                List.of(UUID.randomUUID().toString())
+        );
+
+        // When and Then
+        mockMvc.perform(post(ENDPOINT)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(paymentRequestDTO)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.totalAmount").value(errorMessage))
+                .andExpect(jsonPath("$['financialHelps[0].amount']").value(errorMessage));
+    }
+
+    @Test
+    @DisplayName("Given invalid UUID, when create(), then return 400 and error data")
+    void createFailCaseByInvalidUUIDFields() throws Exception {
+        // Given
+        String errorMessage = "This field is not a valid UUID";
+        FinancialHelpRequestDTO financialHelpRequestDTO = new FinancialHelpRequestDTO(
+                "test",
+                new BigDecimal("10.00")
+        );
+
+        PaymentRequestDTO paymentRequestDTO = new PaymentRequestDTO(
+                "january",
+                "2005",
+                new BigDecimal("33.00"),
+                List.of(financialHelpRequestDTO),
+                List.of("invalid-UUID")
+        );
+
+        // When and Then
+        mockMvc.perform(post(ENDPOINT)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(paymentRequestDTO)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$['studentsIds[0]']").value(errorMessage));
+    }
+
+    @Test
     @DisplayName("Given valid payment ID, when getById(), then return 200 and PaymentResponseDTO")
     void getByIdSuccessCase() throws Exception {
         // Given
@@ -182,7 +301,7 @@ public class PaymentControllerTest {
     }
 
     @Test
-    @DisplayName("Given PaymentAmountsRequestDTO, when  calculateAmounts(), then return PaymentAmountsResponseDTO")
+    @DisplayName("Given PaymentAmountsRequestDTO, when calculateAmounts(), then return PaymentAmountsResponseDTO")
     void calculateAmountsSuccessCase() throws Exception {
         // Given
         String url = ENDPOINT + "/calculate-amounts";
@@ -210,5 +329,90 @@ public class PaymentControllerTest {
                 .andExpect(jsonPath("$.amountToBePaid").value(paymentAmountsResponseDTO.amountToBePaid()))
                 .andExpect(jsonPath("$.studentsQuantity").value(paymentAmountsResponseDTO.studentsQuantity()))
                 .andExpect(jsonPath("$.tuitionAmount").value(paymentAmountsResponseDTO.tuitionAmount()));
+    }
+
+    @Test
+    @DisplayName("Given empty or null fields, when calculateAmounts(), then return 400 and error data")
+    void calculateAmountsFailCaseByEmptyOrNullFields() throws Exception {
+        // Given
+        String url = ENDPOINT + "/calculate-amounts";
+        String nullFieldErrorMessage = "This field cannot be null";
+        String emptyFieldErrorMessage = "This field cannot be empty";
+
+        FinancialHelpRequestDTO financialHelpRequestDTO = new FinancialHelpRequestDTO(
+                "",
+                null
+        );
+
+        PaymentAmountsRequestDTO paymentAmountsRequestDTO = new PaymentAmountsRequestDTO(
+                null,
+                List.of(financialHelpRequestDTO),
+                null
+        );
+
+        // When and Then
+        mockMvc.perform(post(url)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(paymentAmountsRequestDTO)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.totalAmount").value(nullFieldErrorMessage))
+                .andExpect(jsonPath("$['financialHelps[0].name']").value(emptyFieldErrorMessage))
+                .andExpect(jsonPath("$['financialHelps[0].amount']").value(nullFieldErrorMessage))
+                .andExpect(jsonPath("$.studentsQuantity").value(nullFieldErrorMessage));
+    }
+
+    @Test
+    @DisplayName("Given large fields, when calculateAmounts(), then return 400 and error data")
+    void calculateAmountsFailCaseByLargeFields() throws Exception {
+        // Given
+        String url = ENDPOINT + "/calculate-amounts";
+        String largeBigDecimalErrorMessage = "This field must contain a maximum of 6 integers and 2 fractional digits";
+        String largeStudentsQuantityErrorMessage = "This field must contain a maximum of 6 integers digits";
+
+        FinancialHelpRequestDTO financialHelpRequestDTO = new FinancialHelpRequestDTO(
+                "test",
+                new BigDecimal("9999999999.999")
+        );
+
+        PaymentAmountsRequestDTO paymentAmountsRequestDTO = new PaymentAmountsRequestDTO(
+                new BigDecimal("9999999999.999"),
+                List.of(financialHelpRequestDTO),
+                100000
+        );
+
+        // When and Then
+        mockMvc.perform(post(url)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(paymentAmountsRequestDTO)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.totalAmount").value(largeBigDecimalErrorMessage))
+                .andExpect(jsonPath("$['financialHelps[0].amount']").value(largeBigDecimalErrorMessage))
+                .andExpect(jsonPath("$.studentsQuantity").value(largeStudentsQuantityErrorMessage));
+    }
+
+    @Test
+    @DisplayName("Given negative fields, when calculateAmounts(), then return 400 and error data")
+    void calculateAmountsFailCaseFailCaseByNegativeFields() throws Exception {
+        // Given
+        String url = ENDPOINT + "/calculate-amounts";
+        String errorMessage = "This field must be greater than zero";
+        FinancialHelpRequestDTO financialHelpRequestDTO = new FinancialHelpRequestDTO(
+                "test",
+                new BigDecimal("-1.00")
+        );
+
+        PaymentAmountsRequestDTO paymentAmountsRequestDTO = new PaymentAmountsRequestDTO(
+                new BigDecimal("-33.00"),
+                List.of(financialHelpRequestDTO),
+                10
+        );
+
+        // When and Then
+        mockMvc.perform(post(url)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(paymentAmountsRequestDTO)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.totalAmount").value(errorMessage))
+                .andExpect(jsonPath("$['financialHelps[0].amount']").value(errorMessage));
     }
 }
