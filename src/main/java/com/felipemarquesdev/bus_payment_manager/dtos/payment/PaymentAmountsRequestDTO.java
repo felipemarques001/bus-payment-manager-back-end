@@ -26,5 +26,5 @@ public record PaymentAmountsRequestDTO(
                 message = "This field must contain a maximum of 6 integers digits"
         )
         @NotNull(message = "This field cannot be null")
-        int studentsQuantity
+        Integer studentsQuantity
 ) { }
