@@ -1,6 +1,7 @@
 package com.felipemarquesdev.bus_payment_manager.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.felipemarquesdev.bus_payment_manager.dtos.student.StudentActiveRequestDTO;
 import com.felipemarquesdev.bus_payment_manager.dtos.student.StudentResponseDTO;
 import com.felipemarquesdev.bus_payment_manager.dtos.tuition.TuitionPaidRequestDTO;
 import com.felipemarquesdev.bus_payment_manager.dtos.tuition.TuitionResponseDTO;
@@ -178,6 +179,34 @@ class TuitionControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errorType").value(ErrorType.RESOURCE_NOT_FOUND.getValue()))
                 .andExpect(jsonPath("$.message").value("Tuition not found with the ID provided"));
+    }
+
+    @Test
+    @DisplayName("Given null fields, when patchToPaid(), then return 400 and error data")
+    void patchToPaidFailCaseByNullFields() throws Exception {
+        // Given
+        String errorMessage = "This field cannot be null";
+        TuitionPaidRequestDTO tuitionPaidRequestDTO = new TuitionPaidRequestDTO(null);
+
+        // When and Then
+        mockMvc.perform(patch(PATCH_TO_PAID_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(tuitionPaidRequestDTO)))
+                .andExpect(jsonPath("$.paymentType").value(errorMessage));
+    }
+
+    @Test
+    @DisplayName("Given invalid PaymentType, when patchToPaid(), then return 400 and error data")
+    void patchToPaidFailCaseByInvalidPaymentType() throws Exception {
+        // Given
+        String errorMessage = "Unable to deserialize value 'test' into 'PaymentType' enum. The allowed values are: PIX, CARD, BILLET, CASH_PAYMENT";
+        TuitionPaidRequestDTO tuitionPaidRequestDTO = new TuitionPaidRequestDTO("test");
+
+        // When and Then
+        mockMvc.perform(patch(PATCH_TO_PAID_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(tuitionPaidRequestDTO)))
+                .andExpect(jsonPath("$.paymentType").value(errorMessage));
     }
 
     @Test
