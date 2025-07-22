@@ -1,7 +1,9 @@
 package com.felipemarquesdev.bus_payment_manager.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.felipemarquesdev.bus_payment_manager.dtos.financialHelp.FinancialHelpRequestDTO;
 import com.felipemarquesdev.bus_payment_manager.dtos.page.PageResponseDTO;
+import com.felipemarquesdev.bus_payment_manager.dtos.payment.PaymentRequestDTO;
 import com.felipemarquesdev.bus_payment_manager.dtos.student.*;
 import com.felipemarquesdev.bus_payment_manager.entities.Student;
 import com.felipemarquesdev.bus_payment_manager.enums.ErrorType;
@@ -105,6 +107,40 @@ public class StudentControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(studentRequestDTO)))
                 .andExpect(status().isCreated());
+    }
+
+    @Test
+    @DisplayName("Given empty fields, when create(), then return 400 and error data")
+    void createFailCaseByEmptyFields() throws Exception {
+        // Given
+        String errorMessage = "This field cannot be empty";
+        StudentRequestDTO studentRequestDTO = new StudentRequestDTO("", "", "", "");
+
+        // When and Then
+        mockMvc.perform(post(ENDPOINT)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(studentRequestDTO)))
+                .andExpect(jsonPath("$.name").value(errorMessage))
+                .andExpect(jsonPath("$.phoneNumber").value(errorMessage));
+    }
+
+    @Test
+    @DisplayName("Given large fields, when create(), then return 400 and error data")
+    void calculateAmountsFailCaseByLargeFields() throws Exception {
+        // Given
+        String errorMessage = "The phone number must contain a maximum of 11 characters long";
+        StudentRequestDTO studentRequestDTO = new StudentRequestDTO(
+                "name-test",
+                "1234567891011",
+                "major-test",
+                "college-test"
+        );
+
+        // When and Then
+        mockMvc.perform(post(ENDPOINT)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(studentRequestDTO)))
+                .andExpect(jsonPath("$.phoneNumber").value(errorMessage));
     }
 
     @Test
@@ -242,6 +278,40 @@ public class StudentControllerTest {
     }
 
     @Test
+    @DisplayName("Given empty fields, when put(), then return 400 and error data")
+    void putFailCaseByEmptyFields() throws Exception {
+        // Given
+        String errorMessage = "This field cannot be empty";
+        StudentRequestDTO studentRequestDTO = new StudentRequestDTO("", "", "", "");
+
+        // When and Then
+        mockMvc.perform(put(endpointWithStudentId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(studentRequestDTO)))
+                .andExpect(jsonPath("$.name").value(errorMessage))
+                .andExpect(jsonPath("$.phoneNumber").value(errorMessage));
+    }
+
+    @Test
+    @DisplayName("Given large fields, when put(), then return 400 and error data")
+    void putAmountsFailCaseByLargeFields() throws Exception {
+        // Given
+        String errorMessage = "The phone number must contain a maximum of 11 characters long";
+        StudentRequestDTO studentRequestDTO = new StudentRequestDTO(
+                "name-test",
+                "1234567891011",
+                "major-test",
+                "college-test"
+        );
+
+        // When and Then
+        mockMvc.perform(put(endpointWithStudentId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(studentRequestDTO)))
+                .andExpect(jsonPath("$.phoneNumber").value(errorMessage));
+    }
+
+    @Test
     @DisplayName("Given valid student ID, when delete(), then return 204")
     void deleteSuccessCase() throws Exception {
         //Given - valid student ID
@@ -293,6 +363,20 @@ public class StudentControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errorType").value(ErrorType.RESOURCE_NOT_FOUND.getValue()))
                 .andExpect(jsonPath("$.message").value(STUDENT_NOT_FOUND_ERROR_MESSAGE));
+    }
+
+    @Test
+    @DisplayName("Given null fields, when patchActiveStatus(), then return 400 and error data")
+    void patchActiveStatusFailCaseByNullFields() throws Exception {
+        // Given
+        String errorMessage = "This field cannot be null";
+        StudentActiveRequestDTO studentActiveRequestDTO = new StudentActiveRequestDTO(null);
+
+        // When and Then
+        mockMvc.perform(patch(patchActiveStatusUrl)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(studentActiveRequestDTO)))
+                .andExpect(jsonPath("$.active").value(errorMessage));
     }
 
     @Test
