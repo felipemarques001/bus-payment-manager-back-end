@@ -83,4 +83,34 @@ class AuthControllerTest {
                 .andExpect(jsonPath("$.errorType").value(ErrorType.BAD_CREDENTIALS.getValue()))
                 .andExpect(jsonPath("$.message").value(errorMessage));
     }
+
+    @Test
+    @DisplayName("Given empty fields, when POST to login, then return 400 and error data")
+    void loginFailCaseByEmptyFields() throws Exception {
+        // Given
+        String errorMessage = "This field cannot be empty";
+        LoginRequestDTO requestBody = new LoginRequestDTO("", "");
+
+        // when and then
+        mockMvc.perform(post(ENDPOINT)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(requestBody)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.email").value(errorMessage))
+                .andExpect(jsonPath("$.password").value(errorMessage));
+    }
+
+    @Test
+    @DisplayName("Given invalid e-mail, when POST to login, then return 400 and error data")
+    void loginFailCaseByInvalidEmail() throws Exception {
+        // Given
+        LoginRequestDTO requestBody = new LoginRequestDTO("test-email", USER_PASSWORD);
+
+        // when and then
+        mockMvc.perform(post(ENDPOINT)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(requestBody)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.email").value("Invalid e-mail"));
+    }
 }
