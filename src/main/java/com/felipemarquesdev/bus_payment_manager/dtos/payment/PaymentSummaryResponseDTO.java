@@ -21,8 +21,8 @@ public record PaymentSummaryResponseDTO(
     public static PaymentSummaryResponseDTO fromPayment(Payment payment) {
         return new PaymentSummaryResponseDTO(
                 payment.getId(),
-                payment.getMonth(),
-                payment.getYear(),
+                payment.getInvoiceMonth(),
+                payment.getInvoiceYear(),
                 payment.getTotalAmount(),
                 payment.getTuitionAmount()
         );
