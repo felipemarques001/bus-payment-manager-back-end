@@ -13,11 +13,11 @@ public record PaymentRequestDTO(
 
         @NotBlank(message = "This field cannot be empty")
         @Length(max = 9, message = "The month must contain a maximum of {max} characters long")
-        String month,
+        String invoiceMonth,
 
         @NotBlank(message = "This field cannot be empty")
         @Length(max = 4, message = "The year must contain a maximum of {max} characters long")
-        String year,
+        String invoiceYear,
 
         @Digits(
                 integer = 6,

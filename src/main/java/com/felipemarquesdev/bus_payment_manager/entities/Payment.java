@@ -25,9 +25,11 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    private String month;
+    @Column(name = "invoice_month")
+    private String invoiceMonth;
 
-    private String year;
+    @Column(name = "invoice_year")
+    private String invoiceYear;
 
     @Column(name = "total_amount")
     private BigDecimal totalAmount;
@@ -49,8 +51,8 @@ public class Payment {
     private LocalDateTime createdAt;
 
     public Payment(PaymentRequestDTO dto, BigDecimal totalToBePaid, BigDecimal tuitionAmount) {
-        this.month = dto.month();
-        this.year = dto.year();
+        this.invoiceMonth = dto.invoiceMonth();
+        this.invoiceYear = dto.invoiceYear();
         this.totalAmount = dto.totalAmount();
         this.totalToBePaid = totalToBePaid;
         this.tuitionAmount = tuitionAmount;

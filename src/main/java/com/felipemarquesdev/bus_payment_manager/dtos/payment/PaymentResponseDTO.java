@@ -32,8 +32,8 @@ public record PaymentResponseDTO(
 
         return new PaymentResponseDTO(
                 payment.getId(),
-                payment.getMonth(),
-                payment.getYear(),
+                payment.getInvoiceMonth(),
+                payment.getInvoiceYear(),
                 payment.getTotalAmount(),
                 payment.getTotalToBePaid(),
                 payment.getTuitionAmount(),

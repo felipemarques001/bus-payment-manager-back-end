@@ -99,8 +99,8 @@ public class PaymentServiceImplTest {
         );
 
         paymentRequestDTO = new PaymentRequestDTO(
-                payment.getMonth(),
-                payment.getYear(),
+                payment.getInvoiceMonth(),
+                payment.getInvoiceYear(),
                 payment.getTotalAmount(),
                 List.of(firstFinancialHelpRequestDTO, secondFinancialHelpRequestDTO),
                 List.of(UUID.randomUUID().toString(), UUID.randomUUID().toString())
@@ -131,8 +131,8 @@ public class PaymentServiceImplTest {
 
         Payment savedPayment = new Payment();
         savedPayment.setId(UUID.randomUUID());
-        savedPayment.setMonth("July");
-        savedPayment.setYear("2025");
+        savedPayment.setInvoiceMonth("July");
+        savedPayment.setInvoiceYear("2025");
         savedPayment.setTotalAmount(paymentRequestDTO.totalAmount());
         savedPayment.setTotalToBePaid(amountToBePaid);
         savedPayment.setTuitionAmount(tuitionAmount);
@@ -146,8 +146,8 @@ public class PaymentServiceImplTest {
         verify(paymentRepository).save(captorToPayment.capture());
         Payment payment = captorToPayment.getValue();
 
-        assertEquals(paymentRequestDTO.month(), payment.getMonth());
-        assertEquals(paymentRequestDTO.year(), payment.getYear());
+        assertEquals(paymentRequestDTO.invoiceMonth(), payment.getInvoiceMonth());
+        assertEquals(paymentRequestDTO.invoiceYear(), payment.getInvoiceYear());
         assertEquals(paymentRequestDTO.totalAmount(), payment.getTotalAmount());
         assertEquals(amountToBePaid, payment.getTotalToBePaid());
         assertEquals(tuitionAmount, payment.getTuitionAmount());
@@ -242,8 +242,8 @@ public class PaymentServiceImplTest {
         assertEquals(1, response.totalPages());
         assertTrue(response.last());
         assertEquals(payment.getId(), paymentResponse.id());
-        assertEquals(payment.getMonth(), paymentResponse.month());
-        assertEquals(payment.getYear(), paymentResponse.year());
+        assertEquals(payment.getInvoiceMonth(), paymentResponse.month());
+        assertEquals(payment.getInvoiceYear(), paymentResponse.year());
         assertEquals(payment.getTotalAmount(), paymentResponse.totalAmount());
         assertEquals(payment.getTuitionAmount(), paymentResponse.tuitionAmount());
     }
