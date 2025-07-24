@@ -15,6 +15,7 @@ import com.felipemarquesdev.bus_payment_manager.repositories.PaymentRepository;
 import com.felipemarquesdev.bus_payment_manager.repositories.StudentRepository;
 import com.felipemarquesdev.bus_payment_manager.repositories.TuitionRepository;
 import com.felipemarquesdev.bus_payment_manager.repositories.UserRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -74,9 +75,13 @@ public class TuitionControllerIT {
 
     @BeforeEach
     void setUp() throws Exception {
-        deleteEntities();
         saveEntities();
         getAuthToken();
+    }
+
+    @AfterEach
+    void shutDown() throws Exception {
+        deleteEntities();
     }
 
     @Test
