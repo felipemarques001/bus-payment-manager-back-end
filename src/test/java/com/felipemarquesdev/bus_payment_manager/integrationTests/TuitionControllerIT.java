@@ -80,7 +80,7 @@ public class TuitionControllerIT {
     }
 
     @AfterEach
-    void shutDown() throws Exception {
+    void shutDown() {
         deleteEntities();
     }
 

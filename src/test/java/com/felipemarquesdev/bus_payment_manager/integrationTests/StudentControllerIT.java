@@ -71,7 +71,7 @@ public class StudentControllerIT {
     }
 
     @AfterEach
-    void shutDown() throws Exception {
+    void shutDown()  {
         deleteEntities();
     }
 
