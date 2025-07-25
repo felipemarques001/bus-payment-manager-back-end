@@ -12,4 +12,5 @@ import java.util.UUID;
 public interface TuitionRepository extends JpaRepository<Tuition, UUID> {
 
     List<Tuition> findAllByPaymentIdAndStatus(UUID paymentId, TuitionStatus status);
+    List<Tuition> findAllByPaymentId(UUID paymentId);
 }
