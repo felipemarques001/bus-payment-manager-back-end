@@ -30,14 +30,16 @@ public class TuitionServiceImpl implements TuitionService {
 
     @Override
     public List<TuitionResponseDTO> findAllByPaymentIdAndStatus(UUID paymentId, TuitionStatus status) {
-        List<Tuition> tuitionList = repository.findAllByPaymentIdAndStatus(paymentId, status)
-                .stream()
-                .sorted(Comparator.comparing(tuition -> tuition.getStudent().getName()))
-                .toList();
+        List<Tuition> tuitionList = repository.findAllByPaymentId(paymentId);
 
         if (tuitionList.isEmpty()) {
             throw new BadRequestValueException("Invalid payment ID!");
         }
+
+        tuitionList = tuitionList.stream()
+                .filter(tuition -> tuition.getStatus() == status)
+                .sorted(Comparator.comparing(tuition -> tuition.getStudent().getName()))
+                .toList();
 
         return tuitionList.stream()
                 .map((TuitionResponseDTO::fromTuition))

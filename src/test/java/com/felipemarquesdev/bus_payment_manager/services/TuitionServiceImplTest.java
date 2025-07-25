@@ -76,7 +76,7 @@ public class TuitionServiceImplTest {
     @DisplayName("Given valid tuition list, when findAllByPaymentIdAndStatus(), then return TuitionResponseDTO list")
     void findAllByPaymentIdAndStatusSuccessCase() {
         // Given
-        when(tuitionRepository.findAllByPaymentIdAndStatus(PAYMENT_ID, TUITION_STATUS))
+        when(tuitionRepository.findAllByPaymentId(PAYMENT_ID))
                 .thenReturn(List.of(tuition));
 
         // When
@@ -95,7 +95,7 @@ public class TuitionServiceImplTest {
     @DisplayName("Given empty tuition list, when findAllByPaymentIdAndStatus(), then throw BadRequestValueException")
     void findAllByPaymentIdAndStatusFailCase() {
         // Given
-        when(tuitionRepository.findAllByPaymentIdAndStatus(PAYMENT_ID, TUITION_STATUS)).thenReturn(List.of());
+        when(tuitionRepository.findAllByPaymentId(PAYMENT_ID)).thenReturn(List.of());
 
         // When
         try {
