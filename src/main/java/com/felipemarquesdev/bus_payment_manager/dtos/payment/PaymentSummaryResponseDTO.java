@@ -9,9 +9,9 @@ public record PaymentSummaryResponseDTO(
 
         UUID id,
 
-        String month,
+        String invoiceMonth,
 
-        String year,
+        String invoiceYear,
 
         BigDecimal totalAmount,
 

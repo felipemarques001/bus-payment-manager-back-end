@@ -173,8 +173,8 @@ public class PaymentServiceImplTest {
 
         // Then
         assertEquals(paymentResponseDTO.id(), response.id());
-        assertEquals(paymentResponseDTO.month(), response.month());
-        assertEquals(paymentResponseDTO.year(), response.year());
+        assertEquals(paymentResponseDTO.invoiceMonth(), response.invoiceMonth());
+        assertEquals(paymentResponseDTO.invoiceYear(), response.invoiceYear());
         assertEquals(paymentResponseDTO.totalAmount(), response.totalAmount());
         assertEquals(paymentResponseDTO.totalToBePaid(), response.totalToBePaid());
         assertEquals(paymentResponseDTO.tuitionAmount(), response.tuitionAmount());
@@ -242,8 +242,8 @@ public class PaymentServiceImplTest {
         assertEquals(1, response.totalPages());
         assertTrue(response.last());
         assertEquals(payment.getId(), paymentResponse.id());
-        assertEquals(payment.getInvoiceMonth(), paymentResponse.month());
-        assertEquals(payment.getInvoiceYear(), paymentResponse.year());
+        assertEquals(payment.getInvoiceMonth(), paymentResponse.invoiceMonth());
+        assertEquals(payment.getInvoiceYear(), paymentResponse.invoiceYear());
         assertEquals(payment.getTotalAmount(), paymentResponse.totalAmount());
         assertEquals(payment.getTuitionAmount(), paymentResponse.tuitionAmount());
     }
