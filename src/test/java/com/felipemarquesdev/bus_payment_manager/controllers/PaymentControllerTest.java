@@ -240,8 +240,8 @@ public class PaymentControllerTest {
         mockMvc.perform(get(url))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(payment.getId().toString()))
-                .andExpect(jsonPath("$.month").value(payment.getInvoiceMonth()))
-                .andExpect(jsonPath("$.year").value(payment.getInvoiceYear()))
+                .andExpect(jsonPath("$.invoiceMonth").value(payment.getInvoiceMonth()))
+                .andExpect(jsonPath("$.invoiceYear").value(payment.getInvoiceYear()))
                 .andExpect(jsonPath("$.totalAmount").value(payment.getTotalAmount()))
                 .andExpect(jsonPath("$.totalToBePaid").value(payment.getTotalToBePaid()))
                 .andExpect(jsonPath("$.tuitionAmount").value(payment.getTuitionAmount()))
@@ -294,8 +294,8 @@ public class PaymentControllerTest {
                 .andExpect(jsonPath("$.totalPages").value(1))
                 .andExpect(jsonPath("$.last").value(true))
                 .andExpect(jsonPath("$.content[0].id").value(payment.getId().toString()))
-                .andExpect(jsonPath("$.content[0].month").value(payment.getInvoiceMonth()))
-                .andExpect(jsonPath("$.content[0].year").value(payment.getInvoiceYear()))
+                .andExpect(jsonPath("$.content[0].invoiceMonth").value(payment.getInvoiceMonth()))
+                .andExpect(jsonPath("$.content[0].invoiceYear").value(payment.getInvoiceYear()))
                 .andExpect(jsonPath("$.content[0].totalAmount").value(payment.getTotalAmount()))
                 .andExpect(jsonPath("$.content[0].tuitionAmount").value(payment.getTuitionAmount()));
     }
