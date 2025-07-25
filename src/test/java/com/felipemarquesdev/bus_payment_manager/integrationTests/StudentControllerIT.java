@@ -65,7 +65,6 @@ public class StudentControllerIT {
 
     @BeforeEach
     void setUp() throws Exception {
-        deleteEntities();
         saveEntities();
         getAuthToken();
     }
