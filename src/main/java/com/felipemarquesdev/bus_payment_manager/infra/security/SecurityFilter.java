@@ -32,7 +32,7 @@ public class SecurityFilter extends OncePerRequestFilter {
             FilterChain filterChain
     ) throws ServletException, IOException {
         String authToken = recoverAuthToken(request);
-        String email = tokenService.validateToken(authToken);
+        String email = tokenService.validateAccessToken(authToken);
 
         if (email != null) {
             User user = userRepository.findByEmail(email)

@@ -2,6 +2,8 @@ package com.felipemarquesdev.bus_payment_manager.controllers;
 
 import com.felipemarquesdev.bus_payment_manager.dtos.auth.LoginRequestDTO;
 import com.felipemarquesdev.bus_payment_manager.dtos.auth.LoginResponseDTO;
+import com.felipemarquesdev.bus_payment_manager.dtos.auth.RefreshTokenRequestDTO;
+import com.felipemarquesdev.bus_payment_manager.dtos.auth.RefreshTokenResponseDTO;
 import com.felipemarquesdev.bus_payment_manager.services.interfaces.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -24,6 +26,12 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid LoginRequestDTO requestBody) {
         LoginResponseDTO responseBody = authService.login(requestBody);
+        return ResponseEntity.status(HttpStatus.OK).body(responseBody);
+    }
+
+    @PostMapping("/refresh-token")
+    public ResponseEntity<RefreshTokenResponseDTO> refreshToken(@RequestBody @Valid RefreshTokenRequestDTO requestBody) {
+        RefreshTokenResponseDTO responseBody = authService.refreshToken(requestBody);
         return ResponseEntity.status(HttpStatus.OK).body(responseBody);
     }
 }
