@@ -251,6 +251,6 @@ public class TuitionControllerIT {
 
         String responseContent = mvcResult.getResponse().getContentAsString();
         JsonNode jsonNode = objectMapper.readTree(responseContent);
-        authToken = jsonNode.get("token").asText();
+        authToken = jsonNode.get("accessToken").asText();
     }
 }

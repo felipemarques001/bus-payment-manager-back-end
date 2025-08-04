@@ -53,9 +53,10 @@ class AuthControllerTest {
     @DisplayName("Given valid credentials, when POST to login, then return 200 and token")
     void loginSuccessCase() throws Exception {
         // Given
-        String token = "valid_token";
+        String accessToken = "valid_access_token";
+        String refreshToken = "valid_refresh_token";
         LoginRequestDTO requestBody = new LoginRequestDTO(USER_EMAIL, USER_PASSWORD);
-        LoginResponseDTO responseBody = new LoginResponseDTO(token);
+        LoginResponseDTO responseBody = new LoginResponseDTO(accessToken, refreshToken);
         when(authService.login(any(LoginRequestDTO.class))).thenReturn(responseBody);
 
         // when and then
@@ -63,7 +64,8 @@ class AuthControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(requestBody)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.token").value(token));
+                .andExpect(jsonPath("$.accessToken").value(accessToken))
+                .andExpect(jsonPath("$.refreshToken").value(refreshToken));
     }
 
     @Test

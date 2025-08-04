@@ -56,16 +56,19 @@ class AuthServiceImplTest {
     @DisplayName("Given valid user, when login(), then return DTO with token")
     void loginSuccessCase() {
         // Given
-        String token = "token";
+        String accessToken = "valid_access_token";
+        String refreshToken = "valid_refresh_token";
         when(userRepository.findByEmail(USER_EMAIL)).thenReturn(Optional.of(user));
         when(passwordEncoder.matches(anyString(), anyString())).thenReturn(true);
-        when(tokenService.generateToken(user)).thenReturn(token);
+        when(tokenService.generateAccessToken(user)).thenReturn(accessToken);
+        when(tokenService.generateRefreshToken(user)).thenReturn(refreshToken);
 
         // When
         LoginResponseDTO response = authService.login(loginRequestDTO);
 
         // Then
-        assertEquals(token, response.token());
+        assertEquals(accessToken, response.accessToken());
+        assertEquals(refreshToken, response.refreshToken());
     }
 
     @Test
