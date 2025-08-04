@@ -15,26 +15,51 @@ import java.time.ZoneOffset;
 @Service
 public class TokenService {
 
-    @Value("${api.security.token.secret}")
-    private String secret;
+    @Value("${api.security.access.token.secret}")
+    private String accessTokenSecret;
+
+    @Value("${api.security.refresh.token.secret}")
+    private String refreshTokenSecret;
 
     @Value("${api.security.token.issuer}")
     private String issuer;
 
-    public String generateToken(User user) {
+    public String generateAccessToken(User user) {
         try {
-            Algorithm algorithm = Algorithm.HMAC256(secret);
-            return JWT.create()
-                    .withIssuer(issuer)
-                    .withSubject(user.getEmail())
-                    .withExpiresAt(generateExpirationDate())
-                    .sign(algorithm);
+            long accessTokenExpirationTimeInMinutes = 15L;
+            return generateToken(accessTokenSecret, user, accessTokenExpirationTimeInMinutes);
         } catch (JWTCreationException ex) {
-            throw new RuntimeException("Error while creating authentication token");
+            throw new RuntimeException("Error while creating access token");
         }
     }
 
-    public String validateToken(String token) {
+    public String generateRefreshToken(User user) {
+        try {
+            long refreshTokenExpirationTimeInMinutes = 7L * 24L * 60L;
+            return generateToken(refreshTokenSecret, user, refreshTokenExpirationTimeInMinutes);
+        } catch (JWTCreationException ex) {
+            throw new RuntimeException("Error while creating refresh token");
+        }
+    }
+
+    public String validateAccessToken(String token) {
+        return validateToken(accessTokenSecret, token);
+    }
+
+    public String validateRefreshToken(String token) {
+        return validateToken(refreshTokenSecret, token);
+    }
+
+    private String generateToken(String secret, User user, long expirationMinutes) {
+        Algorithm algorithm = Algorithm.HMAC256(secret);
+        return JWT.create()
+                .withIssuer(issuer)
+                .withSubject(user.getEmail())
+                .withExpiresAt(generateExpirationDate(expirationMinutes))
+                .sign(algorithm);
+    }
+
+    private String validateToken(String secret, String token) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             return JWT.require(algorithm)
@@ -47,7 +72,7 @@ public class TokenService {
         }
     }
 
-    private Instant generateExpirationDate(){
-        return LocalDateTime.now().plusHours(1).toInstant(ZoneOffset.of("-03:00"));
+    private Instant generateExpirationDate(long minutes){
+        return LocalDateTime.now().plusMinutes(minutes).toInstant(ZoneOffset.of("-03:00"));
     }
 }
