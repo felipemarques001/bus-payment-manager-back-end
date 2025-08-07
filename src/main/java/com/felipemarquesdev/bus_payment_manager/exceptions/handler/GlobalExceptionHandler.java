@@ -76,10 +76,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
 
-    @ExceptionHandler(InvalidRefreshTokenException.class)
-    protected ResponseEntity<Map<String, String>> handleInvalidRefreshTokenException(InvalidRefreshTokenException ex) {
+    @ExceptionHandler(InvalidAuthTokenException.class)
+    protected ResponseEntity<Map<String, String>> handleInvalidRefreshTokenException(InvalidAuthTokenException ex) {
         Map<String, String> error = new HashMap<>();
-        error.put("errorType", ErrorType.INVALID_REFRESH_TOKEN.getValue());
+        error.put("errorType", ErrorType.INVALID_AUTH_TOKEN.getValue());
         error.put("message", ex.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
