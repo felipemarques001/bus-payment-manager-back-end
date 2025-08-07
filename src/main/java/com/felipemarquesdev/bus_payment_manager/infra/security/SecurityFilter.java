@@ -6,6 +6,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -20,23 +21,26 @@ public class SecurityFilter extends OncePerRequestFilter {
 
     private final UserRepository userRepository;
 
-    public SecurityFilter(TokenService tokenService, UserRepository userRepository) {
+    public SecurityFilter(
+            TokenService tokenService,
+            UserRepository userRepository
+    ) {
         this.tokenService = tokenService;
         this.userRepository = userRepository;
     }
 
     @Override
     protected void doFilterInternal(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain
+            @NonNull  HttpServletRequest request,
+            @NonNull HttpServletResponse response,
+            @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
-        String authToken = recoverAuthToken(request);
-        String email = tokenService.validateAccessToken(authToken);
+        String accessToken = recoverAccessToken(request);
+        String email = tokenService.validateAccessToken(accessToken);
 
         if (email != null) {
             User user = userRepository.findByEmail(email)
-                    .orElseThrow(() -> new RuntimeException("User not found with the e-mail sent in authentication token"));
+                    .orElseThrow(() -> new RuntimeException("User not found with the e-mail sent in access token"));
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                     user,
                     null,
@@ -48,7 +52,7 @@ public class SecurityFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private String recoverAuthToken(HttpServletRequest request) {
+    private String recoverAccessToken(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
         return authHeader == null
                 ? null

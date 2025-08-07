@@ -1,6 +1,6 @@
 package com.felipemarquesdev.bus_payment_manager.dtos.auth;
 
-public record LoginResponseDTO(
+public record UserTokensDTO(
 
         String accessToken,
         String refreshToken

@@ -1,11 +1,9 @@
 package com.felipemarquesdev.bus_payment_manager.services;
 
 import com.felipemarquesdev.bus_payment_manager.dtos.auth.LoginRequestDTO;
-import com.felipemarquesdev.bus_payment_manager.dtos.auth.LoginResponseDTO;
-import com.felipemarquesdev.bus_payment_manager.dtos.auth.RefreshTokenRequestDTO;
-import com.felipemarquesdev.bus_payment_manager.dtos.auth.RefreshTokenResponseDTO;
+import com.felipemarquesdev.bus_payment_manager.dtos.auth.AccessTokenResponseDTO;
+import com.felipemarquesdev.bus_payment_manager.dtos.auth.UserTokensDTO;
 import com.felipemarquesdev.bus_payment_manager.entities.User;
-import com.felipemarquesdev.bus_payment_manager.exceptions.InvalidRefreshTokenException;
 import com.felipemarquesdev.bus_payment_manager.exceptions.UserNotFoundException;
 import com.felipemarquesdev.bus_payment_manager.infra.security.TokenService;
 import com.felipemarquesdev.bus_payment_manager.repositories.UserRepository;
@@ -32,7 +30,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public LoginResponseDTO login(LoginRequestDTO loginRequestDTO) {
+    public UserTokensDTO login(LoginRequestDTO loginRequestDTO) {
         User user = userRepository.findByEmail(loginRequestDTO.email())
                 .orElseThrow(() -> new UserNotFoundException("Invalid credentials"));
 
@@ -42,20 +40,17 @@ public class AuthServiceImpl implements AuthService {
 
         String accessToken = tokenService.generateAccessToken(user);
         String refreshToken = tokenService.generateRefreshToken(user);
-        return new LoginResponseDTO(accessToken, refreshToken);
+        return new UserTokensDTO(accessToken, refreshToken);
     }
 
     @Override
-    public RefreshTokenResponseDTO refreshToken(RefreshTokenRequestDTO refreshTokenRequestDTO) {
-        String userEmail = tokenService.validateRefreshToken(refreshTokenRequestDTO.refreshToken());
-        if (userEmail == null) {
-            throw new InvalidRefreshTokenException();
-        }
+    public AccessTokenResponseDTO refreshToken(String refreshToken) {
+        String userEmail = tokenService.validateRefreshToken(refreshToken);
 
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new UserNotFoundException("User not found with the e-mail provided in the refresh token"));
 
         String accessToken = tokenService.generateAccessToken(user);
-        return new RefreshTokenResponseDTO(accessToken);
+        return new AccessTokenResponseDTO(accessToken);
     }
 }
