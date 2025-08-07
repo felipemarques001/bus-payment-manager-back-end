@@ -1,7 +1,8 @@
 package com.felipemarquesdev.bus_payment_manager.services;
 
 import com.felipemarquesdev.bus_payment_manager.dtos.auth.LoginRequestDTO;
-import com.felipemarquesdev.bus_payment_manager.dtos.auth.LoginResponseDTO;
+import com.felipemarquesdev.bus_payment_manager.dtos.auth.AccessTokenResponseDTO;
+import com.felipemarquesdev.bus_payment_manager.dtos.auth.UserTokensDTO;
 import com.felipemarquesdev.bus_payment_manager.entities.User;
 import com.felipemarquesdev.bus_payment_manager.exceptions.UserNotFoundException;
 import com.felipemarquesdev.bus_payment_manager.infra.security.TokenService;
@@ -64,7 +65,7 @@ class AuthServiceImplTest {
         when(tokenService.generateRefreshToken(user)).thenReturn(refreshToken);
 
         // When
-        LoginResponseDTO response = authService.login(loginRequestDTO);
+        UserTokensDTO response = authService.login(loginRequestDTO);
 
         // Then
         assertEquals(accessToken, response.accessToken());
@@ -102,5 +103,22 @@ class AuthServiceImplTest {
             assertEquals(BadCredentialsException.class, ex.getClass());
             assertEquals(ERROR_MESSAGE, ex.getMessage());
         }
+    }
+
+    @Test
+    @DisplayName("Given valid refresh token cookie, when refreshToken(), then return DTO with access token")
+    void refreshTokenSuccessCase() {
+        // Given
+        String accessToken = "valid_access_token";
+        String refreshToken = "valid_refresh_token";
+        when(tokenService.validateRefreshToken(refreshToken)).thenReturn(USER_EMAIL);
+        when(userRepository.findByEmail(USER_EMAIL)).thenReturn(Optional.of(user));
+        when(tokenService.generateAccessToken(user)).thenReturn(accessToken);
+
+        // When
+        AccessTokenResponseDTO response = authService.refreshToken(refreshToken);
+
+        // Then
+        assertEquals(accessToken, response.accessToken());
     }
 }

@@ -2,7 +2,8 @@ package com.felipemarquesdev.bus_payment_manager.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.felipemarquesdev.bus_payment_manager.dtos.auth.LoginRequestDTO;
-import com.felipemarquesdev.bus_payment_manager.dtos.auth.LoginResponseDTO;
+import com.felipemarquesdev.bus_payment_manager.dtos.auth.AccessTokenResponseDTO;
+import com.felipemarquesdev.bus_payment_manager.dtos.auth.UserTokensDTO;
 import com.felipemarquesdev.bus_payment_manager.enums.ErrorType;
 import com.felipemarquesdev.bus_payment_manager.exceptions.UserNotFoundException;
 import com.felipemarquesdev.bus_payment_manager.infra.security.TokenService;
@@ -21,8 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(
         controllers = AuthController.class,
@@ -56,7 +56,7 @@ class AuthControllerTest {
         String accessToken = "valid_access_token";
         String refreshToken = "valid_refresh_token";
         LoginRequestDTO requestBody = new LoginRequestDTO(USER_EMAIL, USER_PASSWORD);
-        LoginResponseDTO responseBody = new LoginResponseDTO(accessToken, refreshToken);
+        UserTokensDTO responseBody = new UserTokensDTO(accessToken, refreshToken);
         when(authService.login(any(LoginRequestDTO.class))).thenReturn(responseBody);
 
         // when and then
@@ -65,7 +65,7 @@ class AuthControllerTest {
                 .content(objectMapper.writeValueAsString(requestBody)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.accessToken").value(accessToken))
-                .andExpect(jsonPath("$.refreshToken").value(refreshToken));
+                .andExpect(cookie().value("refreshToken", refreshToken));
     }
 
     @Test
