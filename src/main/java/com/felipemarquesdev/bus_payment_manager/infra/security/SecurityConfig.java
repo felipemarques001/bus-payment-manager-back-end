@@ -43,7 +43,8 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        int rounds = 12;
+        return new BCryptPasswordEncoder(rounds);
     }
 
     @Bean
