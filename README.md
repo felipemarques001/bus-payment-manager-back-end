@@ -12,7 +12,7 @@ A API do BusPaymentManager é uma aplicação Java e Spring que tem como objetiv
 - Uso de migrations para controle e versionamento do SQL que gera o banco de dados.
 - Uso de padrão de projeto simples que facilita a manutenção e melhoria do código. 
 
-## 🛠 Tecnologiase Biblotecas Utilizadas - Back-end
+## 🛠 Tecnologias e Biblotecas Utilizadas - Back-end
 - Java 21
 - Ecossitemas Spring (Spring Boot, Spring Data JPA, Spring Security)
 - PostgreSQL
@@ -27,7 +27,7 @@ A API do BusPaymentManager é uma aplicação Java e Spring que tem como objetiv
 ## Link para o repositório do Front-End:
 - https://github.com/felipemarques001/bus-payment-manager-frontend
 
-## 🛠 Tecnologiase Biblotecas Utilizadas - Front-end
+## 🛠 Tecnologias e Biblotecas Utilizadas - Front-end
 - Angular
 - TypeScript
 - ngx-mask
