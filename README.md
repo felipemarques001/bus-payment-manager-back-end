@@ -1,6 +1,6 @@
 # 🚌 BusPaymentManager - API
 
-A API do BusPaymentManager é uma aplicação Java e Spring que tem como objetivo gerenciar as mensalidades dos alunos universitários que utilizam um ônibus particular, oferecendo uma experiência mais simples e rápida, facilitando o controle de tais mensalidades. 
+A API BusPaymentManager é uma aplicação Java e Spring que tem como objetivo gerenciar as mensalidades dos alunos universitários que utilizam um ônibus particular, oferecendo uma experiência mais simples e rápida, facilitando o controle de tais mensalidades. 
 
 ## ✨ Funcionalidades
 - CRUD de alunos, pagamentos e mensalidades.
