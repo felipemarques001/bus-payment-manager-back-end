@@ -1,9 +1,7 @@
 package com.felipemarquesdev.bus_payment_manager.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.felipemarquesdev.bus_payment_manager.dtos.financialHelp.FinancialHelpRequestDTO;
 import com.felipemarquesdev.bus_payment_manager.dtos.page.PageResponseDTO;
-import com.felipemarquesdev.bus_payment_manager.dtos.payment.PaymentRequestDTO;
 import com.felipemarquesdev.bus_payment_manager.dtos.student.*;
 import com.felipemarquesdev.bus_payment_manager.entities.Student;
 import com.felipemarquesdev.bus_payment_manager.enums.ErrorType;
