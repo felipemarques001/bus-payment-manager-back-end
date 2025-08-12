@@ -4,6 +4,7 @@ A API BusPaymentManager é uma aplicação Java e Spring que tem como objetivo g
 
 ## ✨ Funcionalidades
 - CRUD de alunos, pagamentos e mensalidades.
+- Cálculo de valores monetários utilizando BigDecimal.
 - Resultados de buscas enviados em formato de paginações.
 - Autenticação com base em token de acesso JWT.
 - Geração de cookie HTTP only que armazena um refresh token usado para atualização de token de acesso sem necessitar autenticação repetidamente do usuário.
