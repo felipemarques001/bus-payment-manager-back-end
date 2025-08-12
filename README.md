@@ -22,14 +22,13 @@ A API do BusPaymentManager é uma aplicação Java e Spring que tem como objetiv
 - Lombok
 - JUnit 5
 - Mockito
+- Swagger
 - Git
+
+## 📋 Documentação da API
+- A documentação da API foi gerada automaticamente pelo Swagger. Você pode acessá-la através do endpoint "**/swagger-ui/index.html**".
+  - Exemplo: http://localhost:8080/swagger-ui/index.html
+  - **Observação:** O acesso à documentação está disponível somente enquanto a API estiver em execução localmente.
   
 ## Link para o repositório do Front-End:
 - https://github.com/felipemarques001/bus-payment-manager-frontend
-
-## 🛠 Tecnologias e Biblotecas Utilizadas - Front-end
-- Angular
-- TypeScript
-- ngx-mask
-- ngx-toastr
-- Git
