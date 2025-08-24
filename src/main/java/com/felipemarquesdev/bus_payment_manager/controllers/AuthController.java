@@ -41,10 +41,10 @@ public class AuthController {
         UserTokensDTO tokens = authService.login(requestBody);
         ResponseCookie accessTokenCookie = ResponseCookie.from("refreshToken", tokens.refreshToken())
                 .httpOnly(true)
-                .secure(false)
+                .secure(true)
                 .path("/api/auth/refresh-token")
                 .maxAge(refreshTokenMaxSeconds)
-                .sameSite("Lax")
+                .sameSite("None")
                 .build();
 
         response.addHeader("Set-Cookie", accessTokenCookie.toString());
